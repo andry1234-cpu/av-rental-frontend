@@ -2,9 +2,15 @@ services:
   - type: web
     name: av-rental-frontend
     env: static
-    buildCommand: echo "No build needed"
+    buildCommand: echo "Building frontend..."
     staticPublishPath: ./
     headers:
       - path: /*
         name: Cache-Control
         value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    autoDeploy: true
+    branch: main
