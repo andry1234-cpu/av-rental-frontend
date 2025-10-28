@@ -7,9 +7,17 @@ async function loadEquipment() {
     const card = document.createElement('div');
     card.className = 'card';
 
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'image-container';
+    
     const img = document.createElement('img');
     img.src = item.imageUrl || 'fallback.jpg';
     img.alt = item.name;
+    
+    imageContainer.appendChild(img);
+
+    const info = document.createElement('div');
+    info.className = 'info';
 
     const title = document.createElement('h3');
     title.textContent = item.name;
@@ -20,7 +28,8 @@ async function loadEquipment() {
     const quantity = document.createElement('p');
     quantity.textContent = `Disponibili: ${item.quantity}`;
 
-    card.append(img, title, category, quantity);
+    info.append(title, category, quantity);
+    card.append(imageContainer, info);
     grid.appendChild(card);
   });
 }
