@@ -37,7 +37,32 @@ function displayEquipment(categoryFilter) {
       const quantity = document.createElement('p');
       quantity.textContent = `Disponibili: ${item.quantity}`;
 
-      info.append(title, category, quantity);
+      // Aggiungiamo le specifiche tecniche
+      const specs = document.createElement('div');
+      specs.className = 'specs';
+
+      if (item.weight && item.weight.value) {
+        const weight = document.createElement('p');
+        weight.className = 'spec-item';
+        weight.innerHTML = `<strong>Peso:</strong> ${item.weight.value}${item.weight.unit}`;
+        specs.appendChild(weight);
+      }
+
+      if (item.dimensions) {
+        const dimensions = document.createElement('p');
+        dimensions.className = 'spec-item';
+        dimensions.innerHTML = `<strong>Dimensioni:</strong> ${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}${item.dimensions.unit}`;
+        specs.appendChild(dimensions);
+      }
+
+      if (item.powerConsumption && item.powerConsumption.value) {
+        const power = document.createElement('p');
+        power.className = 'spec-item';
+        power.innerHTML = `<strong>Consumo:</strong> ${item.powerConsumption.value}${item.powerConsumption.unit}`;
+        specs.appendChild(power);
+      }
+
+      info.append(title, category, quantity, specs);
       card.append(imageContainer, info);
       grid.appendChild(card);
     }

@@ -152,6 +152,23 @@ header, footer {
   color: #ccc;
 }
 
+.specs {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spec-item {
+  font-size: 0.9rem;
+  margin: 0.3rem 0 !important;
+  color: #bbb !important;
+}
+
+.spec-item strong {
+  color: #fff;
+  margin-right: 0.5rem;
+}
+
 .card img {
   width: auto;
   height: 120px;
