@@ -2,8 +2,8 @@ services:
   - type: web
     name: av-rental-frontend
     env: static
-    buildCommand: echo "Building frontend..."
-    staticPublishPath: ./
+    buildCommand: echo "No build step needed"
+    staticPublishPath: .
     headers:
       - path: /*
         name: Cache-Control
