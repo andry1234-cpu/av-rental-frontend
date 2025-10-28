@@ -1,5 +1,5 @@
 async function loadEquipment() {
-  const res = await fetch('https://tuo-backend.onrender.com/api/equipment');
+  const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
   const data = await res.json();
   const grid = document.getElementById('equipment-grid');
 
