@@ -11,6 +11,84 @@ header, footer {
   padding: 1rem;
 }
 
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.filter-btn.active {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.filter-btn.audio {
+  background: #FF5252;
+}
+
+.filter-btn.video {
+  background: #448AFF;
+}
+
+.filter-btn.luci {
+  background: #FFD740;
+  color: #333;
+}
+
+.filter-btn.strutture {
+  background: #66BB6A;
+}
+
+.filter-btn.cablaggi {
+  background: #8D6E63;
+}
+
+.filter-btn.all {
+  background: #9E9E9E;
+}
+
+/* Colori per le card in base alla categoria */
+.card[data-category="Audio"] {
+  border-left: 4px solid #FF5252;
+}
+
+.card[data-category="Video"] {
+  border-left: 4px solid #448AFF;
+}
+
+.card[data-category="Luci"] {
+  border-left: 4px solid #FFD740;
+}
+
+.card[data-category="Strutture"] {
+  border-left: 4px solid #66BB6A;
+}
+
+.card[data-category="Cablaggi"] {
+  border-left: 4px solid #8D6E63;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
