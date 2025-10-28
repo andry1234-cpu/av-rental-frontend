@@ -70,23 +70,35 @@ header, footer {
 
 /* Colori per le card in base alla categoria */
 .card[data-category="Audio"] {
-  border-left: 4px solid #FF5252;
+  background: linear-gradient(135deg, rgba(255,82,82,0.15) 0%, #1e1e1e 100%);
+  border: 1px solid rgba(255,82,82,0.3);
 }
 
 .card[data-category="Video"] {
-  border-left: 4px solid #448AFF;
+  background: linear-gradient(135deg, rgba(68,138,255,0.15) 0%, #1e1e1e 100%);
+  border: 1px solid rgba(68,138,255,0.3);
 }
 
 .card[data-category="Luci"] {
-  border-left: 4px solid #FFD740;
+  background: linear-gradient(135deg, rgba(255,215,64,0.15) 0%, #1e1e1e 100%);
+  border: 1px solid rgba(255,215,64,0.3);
 }
 
 .card[data-category="Strutture"] {
-  border-left: 4px solid #66BB6A;
+  background: linear-gradient(135deg, rgba(102,187,106,0.15) 0%, #1e1e1e 100%);
+  border: 1px solid rgba(102,187,106,0.3);
 }
 
 .card[data-category="Cablaggi"] {
-  border-left: 4px solid #8D6E63;
+  background: linear-gradient(135deg, rgba(141,110,99,0.15) 0%, #1e1e1e 100%);
+  border: 1px solid rgba(141,110,99,0.3);
+}
+
+/* Effetto hover sulle card */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
 }
 
 .grid {
