@@ -22,14 +22,14 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 .header-title h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: #00BCD4;
   letter-spacing: 2px;
 }
@@ -40,16 +40,16 @@ nav.main-nav {
 }
 
 .nav-link {
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   text-decoration: none;
   color: #f0f0f0;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
   border-bottom: 3px solid transparent;
   display: inline-block;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .nav-link:hover {
@@ -66,22 +66,22 @@ nav.main-nav {
 footer {
   background: #1f1f1f;
   text-align: center;
-  padding: 1rem;
+  padding: 0.8rem;
   border-top: 2px solid #00BCD4;
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 footer p {
   margin: 0;
   color: #888;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 /* LAYOUT PRINCIPALE */
 main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   min-height: calc(100vh - 200px);
 }
 

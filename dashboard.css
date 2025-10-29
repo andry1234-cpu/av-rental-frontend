@@ -2,67 +2,69 @@
 
 main h2 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #00BCD4;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
 }
 
 .stat-card {
   background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  padding: 2rem;
-  border-radius: 10px;
+  padding: 1.5rem;
+  border-radius: 8px;
   border-left: 4px solid #00BCD4;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .stat-card h3 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.8rem 0;
   color: #888;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .stat-value {
   margin: 0;
-  font-size: 2.8rem;
+  font-size: 2.2rem;
   color: #00BCD4;
   font-weight: bold;
 }
 
 .dashboard-sections {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
   margin-top: 2rem;
 }
 
 .dashboard-section {
   background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  padding: 2rem;
-  border-radius: 10px;
+  padding: 1.5rem;
+  border-radius: 8px;
   border: 1px solid #333;
 }
 
 .dashboard-section h3 {
   color: #00BCD4;
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }

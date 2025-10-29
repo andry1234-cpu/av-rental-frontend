@@ -2,9 +2,9 @@
 
 main h2 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #00BCD4;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -12,8 +12,8 @@ main h2 {
 .filters {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  padding: 2rem;
+  gap: 0.8rem;
+  padding: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -28,9 +28,9 @@ main h2 {
 
 .search-input {
   width: 100%;
-  max-width: 500px;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
+  max-width: 400px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
   border: 2px solid #333;
   border-radius: 25px;
   background: #1f1f1f;
@@ -49,17 +49,17 @@ main h2 {
 }
 
 .filter-btn {
-  padding: 0.9rem 1.7rem;
+  padding: 0.7rem 1.3rem;
   border: none;
-  border-radius: 25px;
-  font-size: 0.95rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 130px;
+  min-width: 110px;
   color: white;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   opacity: 0.35;
   filter: grayscale(70%);
 }
@@ -110,9 +110,9 @@ main h2 {
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+  padding: 1.5rem;
 }
 
 .card {
@@ -179,7 +179,7 @@ main h2 {
 
 .image-container {
   width: 100%;
-  height: 200px;
+  height: 150px;
   background: #2a2a2a;
   overflow: hidden;
   position: relative;
@@ -200,13 +200,13 @@ main h2 {
 }
 
 .info {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .info h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.3rem 0;
   color: #00BCD4;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .info p {
@@ -381,8 +381,8 @@ main h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  padding: 1.2rem 2rem;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
   flex-wrap: nowrap;
 }
 
@@ -390,19 +390,19 @@ main h2 {
 .layout-toggle {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.8rem;
   padding: 0;
   margin-bottom: 0;
   flex-shrink: 0;
 }
 
 .layout-btn {
-  padding: 0.7rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: 2px solid #333;
   border-radius: 5px;
   background: #1f1f1f;
   color: #f0f0f0;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -432,7 +432,7 @@ main h2 {
 .table-view {
   width: 100%;
   overflow-x: auto;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .equipment-table {
@@ -442,6 +442,7 @@ main h2 {
   border: 1px solid #333;
   border-radius: 5px;
   overflow: hidden;
+  font-size: 0.85rem;
 }
 
 .equipment-table thead {
@@ -450,13 +451,13 @@ main h2 {
 }
 
 .equipment-table th {
-  padding: 1.2rem;
+  padding: 0.9rem 0.8rem;
   text-align: left;
   color: #00BCD4;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 0.9rem;
-  letter-spacing: 1px;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
 }
 
 .equipment-table tbody tr {
@@ -470,10 +471,10 @@ main h2 {
 }
 
 .equipment-table td {
-  padding: 1.3rem 1.2rem;
+  padding: 0.9rem 0.8rem;
   color: #f0f0f0;
   vertical-align: middle;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .equipment-table td.category {

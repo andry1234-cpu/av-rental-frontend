@@ -2,27 +2,27 @@
 
 main h2 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #00BCD4;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 main h3 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #00BCD4;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border-bottom: 2px solid #00BCD4;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
 }
 
 main h4 {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #888;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.8rem;
 }
 
 .jobs-container {
@@ -42,16 +42,16 @@ main h4 {
 
 .tab-btn {
   flex: 1;
-  padding: 1.2rem 1.5rem;
+  padding: 0.9rem 1.2rem;
   border: none;
   background: #1f1f1f;
   color: #888;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   border-bottom: 3px solid transparent;
   opacity: 0.6;
 }
@@ -71,7 +71,7 @@ main h4 {
 /* TAB CONTENT */
 .tab-content {
   display: none;
-  padding: 2rem;
+  padding: 1.5rem;
   animation: fadeIn 0.3s ease;
 }
 
@@ -93,8 +93,8 @@ main h4 {
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
 }
 
 .form-group {
@@ -105,8 +105,8 @@ main h4 {
 .form-group label {
   color: #00BCD4;
   font-weight: bold;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -114,12 +114,12 @@ main h4 {
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 0.9rem 1rem;
+  padding: 0.7rem 0.8rem;
   border: 2px solid #333;
   border-radius: 5px;
   background: #1f1f1f;
   color: #f0f0f0;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   transition: all 0.3s ease;
   font-family: inherit;
 }
@@ -134,19 +134,19 @@ main h4 {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 /* MULTI-SELECT */
 .multi-select {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
-  padding: 0.7rem;
+  gap: 0.6rem;
+  padding: 0.6rem;
   background: #1f1f1f;
   border: 2px solid #333;
   border-radius: 5px;
-  min-height: 40px;
+  min-height: 35px;
 }
 
 .multi-item {
@@ -170,13 +170,13 @@ main h4 {
 .btn-primary,
 .btn-secondary,
 .btn-small {
-  padding: 0.9rem 1.5rem;
+  padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -201,8 +201,8 @@ main h4 {
 }
 
 .btn-small {
-  padding: 0.6rem 1rem;
-  font-size: 0.85rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.75rem;
   background: #FF9800;
   color: #121212;
 }
@@ -213,8 +213,8 @@ main h4 {
 
 .form-actions {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
 }
 
 /* DATA MANAGEMENT */
@@ -397,7 +397,7 @@ main h4 {
   background: #1f1f1f;
   border: 1px solid #00BCD4;
   border-radius: 10px;
-  max-width: 600px;
+  max-width: 550px;
   width: 90%;
   max-height: 80vh;
   display: flex;
@@ -406,14 +406,14 @@ main h4 {
 }
 
 .modal-content.modal-large {
-  max-width: 800px;
+  max-width: 700px;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-bottom: 1px solid #00BCD4;
 }
 
@@ -422,10 +422,11 @@ main h4 {
   color: #00BCD4;
   border: none;
   padding: 0;
+  font-size: 1.1rem;
 }
 
 .modal-close {
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   color: #00BCD4;
   line-height: 1;
@@ -443,14 +444,16 @@ main h4 {
 
 .modal-tab-btn {
   flex: 1;
-  padding: 1rem;
+  padding: 0.8rem;
   background: transparent;
   border: none;
   color: #888;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .modal-tab-btn.active {
@@ -465,7 +468,7 @@ main h4 {
 .modal-body {
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem;
+  padding: 1.2rem;
 }
 
 .modal-tab {
@@ -479,11 +482,11 @@ main h4 {
 .modal-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .modal-item {
-  padding: 0.8rem 1rem;
+  padding: 0.7rem 0.8rem;
   background: #2a2a2a;
   border: 1px solid #333;
   border-radius: 5px;
@@ -491,6 +494,7 @@ main h4 {
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
+  font-size: 0.85rem;
 }
 
 .modal-item:hover {
@@ -505,16 +509,16 @@ main h4 {
 }
 
 .modal-item input[type="checkbox"] {
-  margin-right: 0.8rem;
+  margin-right: 0.6rem;
   cursor: pointer;
 }
 
 .modal-footer {
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-top: 1px solid #333;
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 /* EQUIPMENT MODAL STYLES */
