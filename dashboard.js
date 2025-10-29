@@ -99,16 +99,16 @@ function displayDashboardStats() {
     return;
   }
 
-  // Totale articoli (tipi di articoli, non quantità)
+  // Totale quantità in magazzino (quantity - brokenQuantity)
   document.getElementById('total-items').textContent = dashboardStats.totalItems || 0;
 
-  // Categorie uniche
-  document.getElementById('total-categories').textContent = dashboardStats.totalCategories || 0;
+  // Categorie uniche (non usato, potremmo aggiungere)
+  // document.getElementById('total-categories').textContent = dashboardStats.totalCategories || 0;
 
-  // In magazzino (quantità disponibile)
+  // In magazzino (quantità disponibile NON assegnate a lavori attivi)
   document.getElementById('in-stock').textContent = dashboardStats.inStock || 0;
 
-  // In utilizzo (quantità assegnata a lavori)
+  // In utilizzo (quantità assegnata a lavori attivi)
   document.getElementById('in-use').textContent = dashboardStats.inUse || 0;
 
   // Guasti (quantità rotta)
