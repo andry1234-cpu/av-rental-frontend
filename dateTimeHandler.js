@@ -99,7 +99,7 @@ function updateDateTime() {
   const isDom = isDomenica(now);
   const isFestivoOrDomenica = isFest || isDom;
   
-  // Aggiorna HTML
+  // Aggiorna HTML in una singola riga
   headerEl.innerHTML = `
     <h2>${dateStr}</h2>
     <div class="time">${timeStr}</div>
