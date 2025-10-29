@@ -17,7 +17,7 @@ async function pingServer() {
     }
 }
 
-// Funzione per avviare il keep-alive
+// Avviare il keep-alive
 function startKeepAlive() {
     if (keepAliveInterval) {
         clearInterval(keepAliveInterval);
@@ -26,7 +26,7 @@ function startKeepAlive() {
     pingServer(); // Ping immediato all'avvio
 }
 
-// Funzione per fermare il keep-alive
+// Fermare il keep-alive
 function stopKeepAlive() {
     if (keepAliveInterval) {
         clearInterval(keepAliveInterval);
@@ -34,7 +34,7 @@ function stopKeepAlive() {
     }
 }
 
-// Avvia il keep-alive all'inizializzazione
+// Avvio keep-alive all'inizializzazione
 startKeepAlive();
 
 // Gestione visibilità pagina
@@ -45,14 +45,5 @@ document.addEventListener('visibilitychange', () => {
     } else {
         console.log('Pagina visibile, riprendo il ping');
         startKeepAlive();
-    }
-});
-        clearInterval(pingInterval);
-        console.log('Ping in pausa - pagina non visibile');
-    } else {
-        // Quando la pagina torna visibile, riavvia il ping
-        pingServer(); // Ping immediato
-        pingInterval = setInterval(pingServer, PING_INTERVAL);
-        console.log('Ping riattivato - pagina visibile');
     }
 });

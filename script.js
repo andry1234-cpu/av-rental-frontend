@@ -86,13 +86,13 @@ function showSpecsModal(item) {
   const modal = document.getElementById('specs-modal');
   const title = document.getElementById('modal-title');
   const content = document.getElementById('specs-content');
-  
+
   title.textContent = item.name;
   content.innerHTML = '';
 
   // Funzione helper per aggiungere una specifica
   const addSpec = (label, value, unit = '') => {
-    if (value !== undefined && value !== null) {
+    if (value !== undefined && value !== null && value !== '') {
       const specItem = document.createElement('div');
       specItem.className = 'spec-item';
       specItem.innerHTML = `
@@ -103,54 +103,28 @@ function showSpecsModal(item) {
     }
   };
 
-  // Aggiungi categoria
+  // Aggiungi categoria e disponibilità
   addSpec('Categoria', item.category);
-  
-  // Aggiungi quantità disponibile
   addSpec('Disponibilità', item.quantity, ' pezzi');
 
-  // Aggiungi peso se presente
+  // Specifiche opzionali (se presenti)
   if (item.weight && item.weight.value) {
-    addSpec('Peso', item.weight.value, ` ${item.weight.unit}`);
+    addSpec('Peso', item.weight.value, ` ${item.weight.unit || ''}`);
   }
-  
-  // Aggiungi dimensioni se presenti
+
   if (item.dimensions) {
     const { length, width, height, unit } = item.dimensions;
     if (length && width && height) {
       addSpec('Dimensioni', `${length} × ${width} × ${height}`, ` ${unit || 'cm'}`);
     }
   }
-  
-  // Aggiungi consumo energetico se presente
+
   if (item.powerConsumption && item.powerConsumption.value) {
     addSpec('Consumo', item.powerConsumption.value, ` ${item.powerConsumption.unit || 'W'}`);
   }
 
-  // Mostra il modal
-  modal.classList.add('active');
-      content.appendChild(specItem);
-    }
-  };
-
-  // Aggiungi le specifiche
-  if (item.weight) {
-    addSpec('Peso', item.weight.value, ` ${item.weight.unit}`);
-  }
-  
-  if (item.dimensions) {
-    addSpec('Dimensioni', 
-      `${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}`,
-      ` ${item.dimensions.unit}`
-    );
-  }
-  
-  if (item.powerConsumption) {
-    addSpec('Consumo', item.powerConsumption.value, ' W');
-  }
-
-  if (item.voltage) {
-    addSpec('Voltaggio', item.voltage.value, ' V');
+  if (item.voltage && item.voltage.value) {
+    addSpec('Voltaggio', item.voltage.value, ` ${item.voltage.unit || 'V'}`);
   }
 
   if (item.technicalSpecs) {
@@ -159,6 +133,7 @@ function showSpecsModal(item) {
     });
   }
 
+  // Mostra il modal
   modal.classList.add('active');
 }
 
