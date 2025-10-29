@@ -1,23 +1,35 @@
-// Configurazione del keep-alive
-const PING_INTERVAL = 14 * 60 * 1000; // 14 minuti in millisecondi
-const BACKEND_URL = 'https://av-rental-backend.onrender.com/api/equipment';
+// Namespace per il keep-alive
+const KeepAlive = {
+    PING_INTERVAL: 14 * 60 * 1000, // 14 minuti in millisecondi
+    BACKEND_URL: 'https://av-rental-backend.onrender.com/api/equipment',
+    intervalId: null,
 
-// Funzione per il ping del server
-async function pingServer() {
-    try {
-        const res = await fetch(BACKEND_URL);
-        if (!res.ok) {
-            console.warn(`[${new Date().toLocaleTimeString()}] Ping fallito, status: ${res.status}`);
-        } else {
-            console.log(`[${new Date().toLocaleTimeString()}] Server attivo`);
+    // Funzione per il ping del server
+    pingServer: async function() {
+        try {
+            const res = await fetch(this.BACKEND_URL);
+            if (!res.ok) {
+                console.warn(`[${new Date().toLocaleTimeString()}] Ping fallito, status: ${res.status}`);
+            } else {
+                console.log(`[${new Date().toLocaleTimeString()}] Server attivo`);
+            }
+        } catch (error) {
+            console.warn(`[${new Date().toLocaleTimeString()}] Errore ping:`, error.message);
         }
-    } catch (error) {
-        console.warn(`[${new Date().toLocaleTimeString()}] Errore ping:`, error.message);
-    }
-}
+    },
 
-// Avvia il ping periodico
-let pingInterval = setInterval(pingServer, PING_INTERVAL);
+    // Avvia il ping periodico
+    start: function() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+        this.intervalId = setInterval(() => this.pingServer(), this.PING_INTERVAL);
+        this.pingServer(); // Ping immediato all'avvio
+    }
+};
+
+// Avvia il keep-alive
+KeepAlive.start();
 
 // Ping iniziale
 pingServer();

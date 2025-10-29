@@ -183,7 +183,7 @@ function displayEquipment(categoryFilter) {
         showSpecsModal(item);
       };
 
-      info.append(title, category, quantity, specs);
+      info.append(title, category, quantity, specsButton);
       card.append(imageContainer, info);
       grid.appendChild(card);
     }
