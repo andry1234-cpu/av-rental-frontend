@@ -1,5 +1,49 @@
 /* Stili specifici della Dashboard */
 
+.date-time-header {
+  text-align: center;
+  padding: 2rem 1rem 1.5rem;
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #333;
+}
+
+.date-time-header h2 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+.date-time-header .time {
+  font-size: 2.8rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  margin: 0.5rem 0;
+}
+
+.date-time-header .weekday {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0.3rem 0 0 0;
+}
+
+/* Colori per festivi e domenica */
+.date-time-header.festivo {
+  color: #FF5252;
+  border-color: #FF5252;
+}
+
+.date-time-header.festivo h2,
+.date-time-header.festivo .time {
+  color: #FF5252;
+}
+
 main h2 {
   text-align: center;
   font-size: 1.8rem;
