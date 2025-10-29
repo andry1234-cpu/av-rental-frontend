@@ -59,19 +59,22 @@ main h2 {
   color: white;
   text-transform: uppercase;
   letter-spacing: 1px;
-  opacity: 0.6;
+  opacity: 0.35;
+  filter: grayscale(70%);
 }
 
 .filter-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  opacity: 0.9;
+  opacity: 0.75;
+  filter: grayscale(30%);
 }
 
 .filter-btn.active {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   opacity: 1;
+  filter: grayscale(0%);
 }
 
 .filter-btn.audio {
