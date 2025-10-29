@@ -82,6 +82,7 @@ async function loadEquipment(retryCount = 0) {
 }
 
 function showSpecsModal(item) {
+  console.log('Mostrando specifiche per:', item); // Debug log
   const modal = document.getElementById('specs-modal');
   const title = document.getElementById('modal-title');
   const content = document.getElementById('specs-content');
@@ -98,6 +99,36 @@ function showSpecsModal(item) {
         <div class="spec-label">${label}</div>
         <div class="spec-value">${value}${unit}</div>
       `;
+      content.appendChild(specItem);
+    }
+  };
+
+  // Aggiungi categoria
+  addSpec('Categoria', item.category);
+  
+  // Aggiungi quantità disponibile
+  addSpec('Disponibilità', item.quantity, ' pezzi');
+
+  // Aggiungi peso se presente
+  if (item.weight && item.weight.value) {
+    addSpec('Peso', item.weight.value, ` ${item.weight.unit}`);
+  }
+  
+  // Aggiungi dimensioni se presenti
+  if (item.dimensions) {
+    const { length, width, height, unit } = item.dimensions;
+    if (length && width && height) {
+      addSpec('Dimensioni', `${length} × ${width} × ${height}`, ` ${unit || 'cm'}`);
+    }
+  }
+  
+  // Aggiungi consumo energetico se presente
+  if (item.powerConsumption && item.powerConsumption.value) {
+    addSpec('Consumo', item.powerConsumption.value, ` ${item.powerConsumption.unit || 'W'}`);
+  }
+
+  // Mostra il modal
+  modal.classList.add('active');
       content.appendChild(specItem);
     }
   };
