@@ -1,9 +1,64 @@
 let equipmentData = [];
+let retryTimeout = null;
+let pingInterval = null;
 
-async function loadEquipment() {
-  const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
-  equipmentData = await res.json();
-  displayEquipment('all');
+async function pingServer() {
+  try {
+    const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
+    if (!res.ok) {
+      console.warn('Ping fallito, il server potrebbe essere in spin down');
+    } else {
+      console.log('Server ping riuscito:', new Date().toLocaleTimeString());
+    }
+  } catch (error) {
+    console.warn('Errore durante il ping del server:', error);
+  }
+}
+  } catch (error) {
+    console.warn('Ping fallito:', error);
+  }
+}
+
+// Funzione per mantenere il server attivo
+function startKeepAlive() {
+  if (pingInterval) clearInterval(pingInterval);
+  // Ping ogni 14 minuti (il server va in sleep dopo 15 minuti di inattività)
+  pingInterval = setInterval(pingServer, 14 * 60 * 1000);
+}
+
+async function loadEquipment(retryCount = 0) {
+  const grid = document.getElementById('equipment-grid');
+  try {
+    if (retryCount === 0) {
+      grid.innerHTML = '<div class="loading">Caricamento in corso...</div>';
+    } else {
+      grid.innerHTML = '<div class="loading">Server in riavvio, attendi circa 50 secondi... (tentativo ' + (retryCount + 1) + ')</div>';
+    }
+    
+    const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    equipmentData = await res.json();
+    displayEquipment('all');
+    
+    // Se il caricamento ha successo, avvia il keep-alive
+    startKeepAlive();
+    
+    // Pulisci eventuali retry in sospeso
+    if (retryTimeout) {
+      clearTimeout(retryTimeout);
+      retryTimeout = null;
+    }
+  } catch (error) {
+    console.error('Errore nel caricamento dei dati:', error);
+    if (retryCount < 3) { // Massimo 3 tentativi
+      grid.innerHTML = '<div class="warning">Server in riavvio, nuovo tentativo tra 10 secondi... (tentativo ' + (retryCount + 1) + ' di 3)</div>';
+      retryTimeout = setTimeout(() => loadEquipment(retryCount + 1), 10000);
+    } else {
+      grid.innerHTML = '<div class="error">Errore nel caricamento dei dati. Ricarica la pagina per riprovare.</div>';
+    }
+  }
 }
 
 function displayEquipment(categoryFilter) {
