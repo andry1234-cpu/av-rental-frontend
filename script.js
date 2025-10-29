@@ -24,6 +24,8 @@ function startKeepAlive() {
 
 async function loadEquipment(retryCount = 0) {
   const grid = document.getElementById('equipment-grid');
+  console.log('Iniziato caricamento equipment, tentativo:', retryCount);
+  
   try {
     if (retryCount === 0) {
       grid.innerHTML = `
@@ -41,11 +43,23 @@ async function loadEquipment(retryCount = 0) {
         </div>`;
     }
     
-    const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
+    console.log('Invio richiesta al backend...');
+    const res = await fetch('https://av-rental-backend.onrender.com/api/equipment', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
+    console.log('Risposta ricevuta, status:', res.status);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    equipmentData = await res.json();
+    
+    const data = await res.json();
+    console.log('Dati ricevuti:', data);
+    equipmentData = data;
     displayEquipment('all');
     
     // Se il caricamento ha successo, avvia il keep-alive
@@ -118,8 +132,17 @@ function showSpecsModal(item) {
 }
 
 function displayEquipment(categoryFilter) {
+  console.log('Visualizzazione equipment, filtro:', categoryFilter);
+  console.log('Dati disponibili:', equipmentData);
+  
   const grid = document.getElementById('equipment-grid');
   grid.innerHTML = ''; // Pulisce il contenuto esistente
+
+  if (!Array.isArray(equipmentData) || equipmentData.length === 0) {
+    console.log('Nessun dato da visualizzare');
+    grid.innerHTML = '<div class="error">Nessun articolo trovato.</div>';
+    return;
+  }
 
   equipmentData.forEach(item => {
     if (categoryFilter === 'all' || item.category === categoryFilter) {
