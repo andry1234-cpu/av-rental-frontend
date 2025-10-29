@@ -57,7 +57,43 @@ function setupFormListeners() {
   // Populate year and month checkboxes on page load
   populateYearCheckboxes();
   populateMonthCheckboxes();
+  
+  // Setup dropdown toggles
+  setupDropdownToggles();
+  
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown-filter')) {
+      document.querySelectorAll('.dropdown-content').forEach(function(d) {
+        d.classList.remove('show');
+      });
+    }
+  });
 }
+
+function setupDropdownToggles() {
+  var yearsBtn = document.getElementById('years-dropdown-btn');
+  var monthsBtn = document.getElementById('months-dropdown-btn');
+  var yearsContent = document.getElementById('filter-years').parentElement.querySelector('.dropdown-content');
+  var monthsContent = document.getElementById('filter-months').parentElement.querySelector('.dropdown-content');
+  
+  if (yearsBtn && yearsContent) {
+    yearsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      yearsContent.classList.toggle('show');
+      monthsContent.classList.remove('show');
+    });
+  }
+  
+  if (monthsBtn && monthsContent) {
+    monthsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      monthsContent.classList.toggle('show');
+      yearsContent.classList.remove('show');
+    });
+  }
+}
+
 
 // ===== ARCHIVE FILTERS =====
 function populateYearCheckboxes() {
