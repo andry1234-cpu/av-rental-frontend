@@ -19,6 +19,34 @@ header, footer {
   flex-wrap: wrap;
 }
 
+.search-section {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 2rem;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.95rem;
+  border: 2px solid #333;
+  border-radius: 25px;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00BCD4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
 .filter-btn {
   padding: 0.8rem 1.5rem;
   border: none;

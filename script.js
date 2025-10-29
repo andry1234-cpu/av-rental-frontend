@@ -110,8 +110,8 @@ function showSpecsModal(item) {
 }
 
 
-function displayEquipment(categoryFilter) {
-  console.log('Visualizzazione equipment, filtro:', categoryFilter);
+function displayEquipment(categoryFilter, searchTerm) {
+  console.log('Visualizzazione equipment, filtro:', categoryFilter, 'ricerca:', searchTerm);
   console.log('Dati disponibili:', equipmentData);
   
   const grid = document.getElementById('equipment-grid');
@@ -126,7 +126,10 @@ function displayEquipment(categoryFilter) {
   var i;
   for (i = 0; i < equipmentData.length; i++) {
     var item = equipmentData[i];
-    if (categoryFilter === 'all' || item.category === categoryFilter) {
+    var categoryMatch = categoryFilter === 'all' || item.category === categoryFilter;
+    var searchMatch = !searchTerm || item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+    
+    if (categoryMatch && searchMatch) {
       const card = document.createElement('div');
       card.className = 'card';
       card.setAttribute('data-category', item.category);
@@ -185,9 +188,25 @@ function setupFilters() {
       filterButtons.forEach(function(btn) { btn.classList.remove('active'); });
       button.classList.add('active');
       const category = button.getAttribute('data-category');
-      displayEquipment(category);
+      var searchTerm = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
+      displayEquipment(category, searchTerm);
     });
   });
+}
+
+function setupSearch() {
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      var searchTerm = this.value;
+      var activeCategory = 'all';
+      var activeButton = document.querySelector('.filter-btn.active');
+      if (activeButton) {
+        activeCategory = activeButton.getAttribute('data-category');
+      }
+      displayEquipment(activeCategory, searchTerm);
+    });
+  }
 }
 
 function closeModal() {
@@ -213,4 +232,5 @@ function setupModalEvents() {
 
 loadEquipment();
 setupFilters();
+setupSearch();
 setupModalEvents();
