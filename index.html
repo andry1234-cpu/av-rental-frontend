@@ -3,44 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AV Rental Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>AV Rental - Dashboard</title>
+  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="dashboard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
   <script src="keepalive.js" defer></script>
 </head>
 <body>
   <header>
-    <h1>AV Rental Dashboard</h1>
+    <div class="header-container">
+      <div class="header-title">
+        <h1>AV RENTAL</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="magazzino.html" class="nav-link">Magazzino</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section id="category-filters" class="filters">
-      <button class="filter-btn audio active" data-category="Audio">AUDIO</button>
-      <button class="filter-btn video" data-category="Video">VIDEO</button>
-      <button class="filter-btn luci" data-category="Luci">LUCI</button>
-      <button class="filter-btn strutture" data-category="Strutture">STRUTTURE</button>
-      <button class="filter-btn cablaggi" data-category="Cablaggi">CABLAGGI</button>
-      <button class="filter-btn all" data-category="all">TUTTI</button>
-    </section>
-    <section class="search-section">
-      <input type="text" id="search-input" class="search-input" placeholder="Cerca articoli...">
-    </section>
-    <section id="equipment-grid" class="grid"></section>
+    <h2>Dashboard Principale</h2>
+    <div id="dashboard-content" class="dashboard-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Totale Articoli</h3>
+          <p id="total-items" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Categorie</h3>
+          <p id="total-categories" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>In Magazzino</h3>
+          <p id="in-stock" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Lavori Attivi</h3>
+          <p id="active-jobs" class="stat-value">0</p>
+        </div>
+      </div>
+
+      <div class="dashboard-sections">
+        <section class="dashboard-section">
+          <h3>Categoria con più articoli</h3>
+          <div id="category-stats"></div>
+        </section>
+
+        <section class="dashboard-section">
+          <h3>Prossimi eventi (Google Calendar - Da integrare)</h3>
+          <div id="calendar-placeholder" class="calendar-placeholder">
+            <p>Google Calendar da integrare qui</p>
+          </div>
+        </section>
+      </div>
+    </div>
   </main>
 
   <footer>
     <p>&copy; 2025 AV Rental System</p>
   </footer>
 
-  <!-- Modal per i dettagli tecnici -->
-  <div id="specs-modal" class="modal">
-    <div class="modal-content">
-      <span class="modal-close">&times;</span>
-      <h2 id="modal-title"></h2>
-      <div class="specs-grid" id="specs-content"></div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="navigation.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

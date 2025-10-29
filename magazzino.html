@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AV Rental - Magazzino</title>
+  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="magazzino.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <script src="keepalive.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="header-title">
+        <h1>AV RENTAL</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="magazzino.html" class="nav-link">Magazzino</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2>Magazzino Articoli</h2>
+    
+    <section id="category-filters" class="filters">
+      <button class="filter-btn audio active" data-category="Audio">AUDIO</button>
+      <button class="filter-btn video" data-category="Video">VIDEO</button>
+      <button class="filter-btn luci" data-category="Luci">LUCI</button>
+      <button class="filter-btn strutture" data-category="Strutture">STRUTTURE</button>
+      <button class="filter-btn cablaggi" data-category="Cablaggi">CABLAGGI</button>
+      <button class="filter-btn all" data-category="all">TUTTI</button>
+    </section>
+    
+    <section class="search-section">
+      <input type="text" id="search-input" class="search-input" placeholder="Cerca articoli...">
+    </section>
+    
+    <section id="equipment-grid" class="grid"></section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 AV Rental System</p>
+  </footer>
+
+  <!-- Modal per i dettagli tecnici -->
+  <div id="specs-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2 id="modal-title"></h2>
+      <div class="specs-grid" id="specs-content"></div>
+    </div>
+  </div>
+
+  <script src="navigation.js"></script>
+  <script src="magazzino.js"></script>
+</body>
+</html>
