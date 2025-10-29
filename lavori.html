@@ -26,9 +26,139 @@
   <main>
     <h2>Gestione Lavori</h2>
     
-    <section id="jobs-content" class="jobs-content">
-      <p>Contenuto lavori da implementare</p>
-    </section>
+    <div class="jobs-container">
+      <!-- TAB NAVIGATION -->
+      <div class="tabs-navigation">
+        <button class="tab-btn active" data-tab="new-job">Nuovo Lavoro</button>
+        <button class="tab-btn" data-tab="job-list">Archivio Lavori</button>
+        <button class="tab-btn" data-tab="manage-data">Gestisci Dati</button>
+      </div>
+
+      <!-- TAB 1: NEW JOB -->
+      <div id="new-job" class="tab-content active">
+        <h3>Crea Nuovo Lavoro</h3>
+        <form id="new-job-form" class="job-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome Evento *</label>
+              <input type="text" id="job-name" placeholder="Es: Conferenza AV 2025" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Data Inizio *</label>
+              <input type="datetime-local" id="job-start-date" required>
+            </div>
+            <div class="form-group">
+              <label>Data Fine *</label>
+              <input type="datetime-local" id="job-end-date" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Luogo *</label>
+              <input type="text" id="job-location" placeholder="Es: Sala Conferenze Milano" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Responsabile *</label>
+              <select id="job-responsibile" required>
+                <option value="">-- Seleziona Responsabile --</option>
+              </select>
+              <button type="button" class="btn-small" onclick="openResponsibileModal()">+ Aggiungi</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Personale</label>
+              <div id="personnel-list" class="multi-select"></div>
+              <button type="button" class="btn-small" onclick="openPersonnelModal()">+ Aggiungi Personale</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Materiali</label>
+              <div id="materials-list" class="multi-select"></div>
+              <button type="button" class="btn-small" onclick="openMaterialModal()">+ Aggiungi Materiale</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Note</label>
+              <textarea id="job-notes" placeholder="Note aggiuntive..." rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Crea Lavoro</button>
+            <button type="reset" class="btn-secondary">Pulisci</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 2: JOB LIST -->
+      <div id="job-list" class="tab-content">
+        <h3>Archivio Lavori</h3>
+        <div id="jobs-archive" class="jobs-list"></div>
+      </div>
+
+      <!-- TAB 3: MANAGE DATA -->
+      <div id="manage-data" class="tab-content">
+        <h3>Gestisci Dati</h3>
+        
+        <div class="data-sections">
+          <!-- RESPONSABILI -->
+          <section class="data-section">
+            <h4>Responsabili</h4>
+            <div class="data-section-content">
+              <form id="responsibile-form" class="quick-form">
+                <input type="text" id="resp-name" placeholder="Nome Responsabile" required>
+                <input type="email" id="resp-email" placeholder="Email" required>
+                <input type="tel" id="resp-phone" placeholder="Telefono" required>
+                <button type="submit" class="btn-small">Aggiungi</button>
+              </form>
+              <div id="responsibili-list" class="data-list"></div>
+            </div>
+          </section>
+
+          <!-- PERSONALE -->
+          <section class="data-section">
+            <h4>Personale</h4>
+            <div class="data-section-content">
+              <form id="personnel-form" class="quick-form">
+                <input type="text" id="pers-name" placeholder="Nome Personale" required>
+                <input type="text" id="pers-role" placeholder="Ruolo (Tecnico, Operatore, etc.)" required>
+                <input type="email" id="pers-email" placeholder="Email" required>
+                <input type="tel" id="pers-phone" placeholder="Telefono" required>
+                <button type="submit" class="btn-small">Aggiungi</button>
+              </form>
+              <div id="personnel-list-admin" class="data-list"></div>
+            </div>
+          </section>
+
+          <!-- MATERIALI -->
+          <section class="data-section">
+            <h4>Materiali</h4>
+            <div class="data-section-content">
+              <form id="material-form" class="quick-form">
+                <input type="text" id="mat-name" placeholder="Nome Materiale" required>
+                <input type="text" id="mat-category" placeholder="Categoria" required>
+                <input type="text" id="mat-description" placeholder="Descrizione" required>
+                <button type="submit" class="btn-small">Aggiungi</button>
+              </form>
+              <div id="materials-list-admin" class="data-list"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer>

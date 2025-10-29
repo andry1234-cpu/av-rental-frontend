@@ -9,37 +9,372 @@ main h2 {
   letter-spacing: 2px;
 }
 
-.jobs-content {
-  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  padding: 3rem 2rem;
-  border-radius: 10px;
-  border: 1px solid #333;
-  text-align: center;
-  color: #888;
-  min-height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+main h3 {
+  font-size: 1.3rem;
+  color: #00BCD4;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #00BCD4;
+  padding-bottom: 0.5rem;
 }
 
-.jobs-content p {
+main h4 {
   font-size: 1.1rem;
   color: #888;
-  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.jobs-container {
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  border-radius: 10px;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+/* TAB NAVIGATION */
+.tabs-navigation {
+  display: flex;
+  background: #121212;
+  border-bottom: 2px solid #333;
+  gap: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1.2rem 1.5rem;
+  border: none;
+  background: #1f1f1f;
+  color: #888;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid transparent;
+  opacity: 0.6;
+}
+
+.tab-btn:hover {
+  background: #2a2a2a;
+  opacity: 0.8;
+}
+
+.tab-btn.active {
+  background: #2a2a2a;
+  color: #00BCD4;
+  border-bottom-color: #00BCD4;
+  opacity: 1;
+}
+
+/* TAB CONTENT */
+.tab-content {
+  display: none;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* FORMS */
+.job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #00BCD4;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.9rem 1rem;
+  border: 2px solid #333;
+  border-radius: 5px;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #00BCD4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* MULTI-SELECT */
+.multi-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  background: #1f1f1f;
+  border: 2px solid #333;
+  border-radius: 5px;
+  min-height: 40px;
+}
+
+.multi-item {
+  background: #00BCD4;
+  color: #121212;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.multi-item-close {
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+/* BUTTONS */
+.btn-primary,
+.btn-secondary,
+.btn-small {
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: #00BCD4;
+  color: #121212;
+}
+
+.btn-primary:hover {
+  background: #00A0C0;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #333;
+  color: #f0f0f0;
+}
+
+.btn-secondary:hover {
+  background: #444;
+}
+
+.btn-small {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  background: #FF9800;
+  color: #121212;
+}
+
+.btn-small:hover {
+  background: #E68900;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* DATA MANAGEMENT */
+.data-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.data-section {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #00BCD4;
+}
+
+.data-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quick-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.quick-form input {
+  padding: 0.7rem 1rem;
+  border: 2px solid #333;
+  border-radius: 5px;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.quick-form input:focus {
+  outline: none;
+  border-color: #00BCD4;
+}
+
+.data-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.data-item {
+  background: #2a2a2a;
+  padding: 0.9rem;
+  border-radius: 5px;
+  border-left: 3px solid #00BCD4;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data-item-name {
+  font-weight: bold;
+  color: #f0f0f0;
+}
+
+.data-item-meta {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* JOBS LIST */
+.jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.job-card {
+  background: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #00BCD4;
+  transition: all 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.2);
+}
+
+.job-card h4 {
+  margin: 0 0 0.8rem 0;
+  color: #00BCD4;
+}
+
+.job-card-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.job-card-item {
+  flex: 1;
+}
+
+.job-card-label {
+  color: #888;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.job-card-value {
+  color: #f0f0f0;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
+  .tabs-navigation {
+    flex-direction: column;
+  }
+
+  .tab-btn {
+    padding: 1rem;
+  }
+
+  .tab-content {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .data-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
   main h2 {
     font-size: 1.3rem;
   }
 
-  .jobs-content {
-    padding: 2rem 1rem;
-    min-height: 300px;
-  }
-
-  .jobs-content p {
-    font-size: 0.95rem;
+  main h3 {
+    font-size: 1.1rem;
   }
 }
