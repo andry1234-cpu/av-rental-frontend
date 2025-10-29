@@ -99,6 +99,10 @@ main h2 {
   background: #9C27B0;
 }
 
+.filter-btn.it {
+  background: #00BCD4;
+}
+
 .filter-btn.all {
   background: #2196F3;
 }
