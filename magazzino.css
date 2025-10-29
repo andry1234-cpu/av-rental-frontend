@@ -494,6 +494,10 @@ main h2 {
   color: #9C27B0;
 }
 
+.equipment-table td.category.IT\ e\ Reti {
+  color: #00BCD4;
+}
+
 .equipment-table td.quantity {
   color: #00BCD4;
   font-weight: bold;
