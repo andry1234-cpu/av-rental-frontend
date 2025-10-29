@@ -1,43 +1,52 @@
-// Namespace per il keep-alive
-const KeepAlive = {
-    PING_INTERVAL: 14 * 60 * 1000, // 14 minuti in millisecondi
-    BACKEND_URL: 'https://av-rental-backend.onrender.com/api/equipment',
-    intervalId: null,
+// Configurazione keep-alive
+const PING_INTERVAL = 14 * 60 * 1000; // 14 minuti in millisecondi
+const BACKEND_URL = 'https://av-rental-backend.onrender.com/api/equipment';
+let keepAliveInterval = null;
 
-    // Funzione per il ping del server
-    pingServer: async function() {
-        try {
-            const res = await fetch(this.BACKEND_URL);
-            if (!res.ok) {
-                console.warn(`[${new Date().toLocaleTimeString()}] Ping fallito, status: ${res.status}`);
-            } else {
-                console.log(`[${new Date().toLocaleTimeString()}] Server attivo`);
-            }
-        } catch (error) {
-            console.warn(`[${new Date().toLocaleTimeString()}] Errore ping:`, error.message);
+// Funzione per il ping del server
+async function pingServer() {
+    try {
+        const res = await fetch(BACKEND_URL);
+        if (!res.ok) {
+            console.warn(`[${new Date().toLocaleTimeString()}] Ping fallito, status: ${res.status}`);
+        } else {
+            console.log(`[${new Date().toLocaleTimeString()}] Server attivo`);
         }
-    },
-
-    // Avvia il ping periodico
-    start: function() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
-        this.intervalId = setInterval(() => this.pingServer(), this.PING_INTERVAL);
-        this.pingServer(); // Ping immediato all'avvio
+    } catch (error) {
+        console.warn(`[${new Date().toLocaleTimeString()}] Errore ping:`, error.message);
     }
-};
+}
 
-// Avvia il keep-alive
-KeepAlive.start();
+// Funzione per avviare il keep-alive
+function startKeepAlive() {
+    if (keepAliveInterval) {
+        clearInterval(keepAliveInterval);
+    }
+    keepAliveInterval = setInterval(pingServer, PING_INTERVAL);
+    pingServer(); // Ping immediato all'avvio
+}
 
-// Ping iniziale
-pingServer();
+// Funzione per fermare il keep-alive
+function stopKeepAlive() {
+    if (keepAliveInterval) {
+        clearInterval(keepAliveInterval);
+        keepAliveInterval = null;
+    }
+}
 
-// Gestione visibilità pagina per ottimizzazione
+// Avvia il keep-alive all'inizializzazione
+startKeepAlive();
+
+// Gestione visibilità pagina
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-        // Quando la pagina non è visibile, ferma il ping
+        console.log('Pagina nascosta, sospendo il ping');
+        stopKeepAlive();
+    } else {
+        console.log('Pagina visibile, riprendo il ping');
+        startKeepAlive();
+    }
+});
         clearInterval(pingInterval);
         console.log('Ping in pausa - pagina non visibile');
     } else {
