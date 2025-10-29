@@ -189,7 +189,7 @@ function setupFilters() {
       button.classList.add('active');
       const category = button.getAttribute('data-category');
       var searchTerm = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
-      displayEquipment(category, searchTerm);
+      updateCurrentLayout(category, searchTerm);
     });
   });
 }
@@ -204,8 +204,19 @@ function setupSearch() {
       if (activeButton) {
         activeCategory = activeButton.getAttribute('data-category');
       }
-      displayEquipment(activeCategory, searchTerm);
+      updateCurrentLayout(activeCategory, searchTerm);
     });
+  }
+}
+
+function updateCurrentLayout(category, searchTerm) {
+  var grid = document.getElementById('equipment-grid');
+  var table = document.getElementById('equipment-table');
+  
+  if (grid.style.display !== 'none') {
+    displayEquipment(category, searchTerm);
+  } else if (table.style.display !== 'none') {
+    displayEquipmentTable(category, searchTerm);
   }
 }
 
