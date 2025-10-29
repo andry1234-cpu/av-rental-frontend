@@ -435,23 +435,27 @@ function openMaterialModal() {
     sortedCategories.forEach(function(category) {
       modal += '<div class="equipment-category">';
       modal += '<h4 class="category-title">' + category + '</h4>';
-      modal += '<div class="equipment-list">';
+      modal += '<input type="text" class="category-search" placeholder="Cerca in ' + category + '..." onkeyup="filterEquipmentByCategory(this, \'' + category + '\')">';
+      modal += '<div class="equipment-list" data-category="' + category + '">';
       
       categories[category].forEach(function(eq) {
         var selectedQty = getSelectedEquipmentQty(eq._id);
-        modal += '<div class="equipment-item">';
+        var availableQty = eq.quantity - selectedQty;
+        var maxQty = eq.quantity;
+        
+        modal += '<div class="equipment-item" data-equipment-id="' + eq._id + '" data-equipment-name="' + eq.name.toLowerCase() + '">';
         modal += '<div class="equipment-info">';
         modal += '<span class="equipment-name">' + eq.name + '</span>';
-        modal += '<span class="equipment-available">Disponibile: ' + eq.quantity + '</span>';
+        modal += '<span class="equipment-available">Disponibile: <strong>' + availableQty + '</strong>/' + maxQty + '</span>';
         modal += '</div>';
         modal += '<div class="equipment-qty">';
         
         if (selectedQty > 0) {
-          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', -1)">−</button>';
-          modal += '<input type="number" class="qty-input" value="' + selectedQty + '" min="0" onchange="updateEquipmentQtyDirect(\'' + eq._id + '\', this.value)">';
-          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', 1)">+</button>';
+          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', -1, ' + maxQty + ')">−</button>';
+          modal += '<input type="number" class="qty-input" value="' + selectedQty + '" min="0" max="' + maxQty + '" onchange="updateEquipmentQtyDirect(\'' + eq._id + '\', this.value, ' + maxQty + ')">';
+          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', 1, ' + maxQty + ')">+</button>';
         } else {
-          modal += '<button type="button" class="qty-btn-add" onclick="updateEquipmentQty(\'' + eq._id + '\', 1)">Aggiungi</button>';
+          modal += '<button type="button" class="qty-btn-add" onclick="updateEquipmentQty(\'' + eq._id + '\', 1, ' + maxQty + ')">Aggiungi</button>';
         }
         
         modal += '</div>';
@@ -512,9 +516,9 @@ function getSelectedEquipmentQty(equipmentId) {
   return existing ? existing.qty : 0;
 }
 
-function updateEquipmentQty(equipmentId, change) {
+function updateEquipmentQty(equipmentId, change, maxQty) {
   var currentQty = getSelectedEquipmentQty(equipmentId);
-  var newQty = Math.max(0, currentQty + change);
+  var newQty = Math.max(0, Math.min(maxQty, currentQty + change));
   
   var idx = selectedMaterials.findIndex(function(item) {
     return typeof item === 'object' && item.id === equipmentId;
@@ -535,8 +539,8 @@ function updateEquipmentQty(equipmentId, change) {
   openMaterialModal();
 }
 
-function updateEquipmentQtyDirect(equipmentId, value) {
-  var newQty = Math.max(0, parseInt(value) || 0);
+function updateEquipmentQtyDirect(equipmentId, value, maxQty) {
+  var newQty = Math.max(0, Math.min(maxQty, parseInt(value) || 0));
   
   var idx = selectedMaterials.findIndex(function(item) {
     return typeof item === 'object' && item.id === equipmentId;
@@ -576,4 +580,19 @@ function removeMaterialFromSelection(id) {
     return item !== id;
   });
   updateMaterialDisplay();
+}
+
+function filterEquipmentByCategory(input, category) {
+  var searchValue = input.value.toLowerCase();
+  var list = document.querySelector('.equipment-list[data-category="' + category + '"]');
+  var items = list.querySelectorAll('.equipment-item');
+  
+  items.forEach(function(item) {
+    var name = item.getAttribute('data-equipment-name');
+    if (name.includes(searchValue)) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 }
