@@ -109,13 +109,59 @@ main h2 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid #333;
+  border: 2px solid #333;
+}
+
+/* Colori bordo per categoria */
+.card[data-category="Audio"] {
+  border-color: #FF5252;
+}
+
+.card[data-category="Video"] {
+  border-color: #FF9800;
+}
+
+.card[data-category="Luci"] {
+  border-color: #FFEB3B;
+}
+
+.card[data-category="Strutture"] {
+  border-color: #8BC34A;
+}
+
+.card[data-category="Cablaggi"] {
+  border-color: #9C27B0;
 }
 
 .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 8px 24px rgba(0, 188, 212, 0.2);
-  border-color: #00BCD4;
+}
+
+/* Hover effect per categoria */
+.card[data-category="Audio"]:hover {
+  box-shadow: 0 8px 24px rgba(255, 82, 82, 0.3);
+  border-color: #FF5252;
+}
+
+.card[data-category="Video"]:hover {
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+  border-color: #FF9800;
+}
+
+.card[data-category="Luci"]:hover {
+  box-shadow: 0 8px 24px rgba(255, 235, 59, 0.3);
+  border-color: #FFEB3B;
+}
+
+.card[data-category="Strutture"]:hover {
+  box-shadow: 0 8px 24px rgba(139, 195, 74, 0.3);
+  border-color: #8BC34A;
+}
+
+.card[data-category="Cablaggi"]:hover {
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.3);
+  border-color: #9C27B0;
 }
 
 .image-container {
