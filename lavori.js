@@ -2,11 +2,14 @@
 let allResponsibili = [];
 let allPersonnel = [];
 let allMaterials = [];
+let allEquipment = [];
 let allJobs = [];
 let selectedPersonnel = [];
 let selectedMaterials = [];
+let selectedEquipment = [];
 
 const API_BASE = 'https://av-rental-backend.onrender.com/api/jobs';
+const EQUIPMENT_API = 'https://av-rental-backend.onrender.com/api/equipment';
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loadResponsibili();
   loadPersonnel();
   loadMaterials();
+  loadEquipment();
   loadJobs();
   setupFormListeners();
 });
@@ -73,6 +77,15 @@ async function loadMaterials() {
     displayMaterials();
   } catch (error) {
     console.error('Errore caricamento materiali:', error);
+  }
+}
+
+async function loadEquipment() {
+  try {
+    var res = await fetch(API_BASE + '/equipment/list');
+    allEquipment = await res.json();
+  } catch (error) {
+    console.error('Errore caricamento equipment:', error);
   }
 }
 
@@ -310,37 +323,188 @@ function openResponsibileModal() {
 }
 
 function openPersonnelModal() {
-  // Toggle selezione personale (semplificato)
+  // Crea modal per selezione personale
+  var modal = '<div class="modal-overlay" id="personnel-modal-overlay">';
+  modal += '<div class="modal-content">';
+  modal += '<div class="modal-header">';
+  modal += '<h3>Seleziona Personale</h3>';
+  modal += '<span class="modal-close" onclick="closePersonnelModal()">&times;</span>';
+  modal += '</div>';
+  modal += '<div class="modal-body">';
+  
+  if (allPersonnel.length === 0) {
+    modal += '<p style="text-align: center; color: #888;">Nessun personale disponibile. Aggiungi prima dalla scheda Gestisci Dati</p>';
+  } else {
+    modal += '<div class="modal-list">';
+    allPersonnel.forEach(function(pers) {
+      var isSelected = selectedPersonnel.indexOf(pers._id) > -1;
+      modal += '<div class="modal-item' + (isSelected ? ' selected' : '') + '" onclick="togglePersonnelSelection(\'' + pers._id + '\', this)">';
+      modal += '<input type="checkbox"' + (isSelected ? ' checked' : '') + '> ' + pers.name + ' (' + pers.role + ')';
+      modal += '</div>';
+    });
+    modal += '</div>';
+  }
+  
+  modal += '</div>';
+  modal += '<div class="modal-footer">';
+  modal += '<button class="btn-secondary" onclick="closePersonnelModal()">Chiudi</button>';
+  modal += '</div>';
+  modal += '</div>';
+  modal += '</div>';
+  
+  document.body.insertAdjacentHTML('beforeend', modal);
+  updatePersonnelDisplay();
+}
+
+function closePersonnelModal() {
+  var overlay = document.getElementById('personnel-modal-overlay');
+  if (overlay) overlay.remove();
+}
+
+function togglePersonnelSelection(id, elem) {
+  var idx = selectedPersonnel.indexOf(id);
+  if (idx > -1) {
+    selectedPersonnel.splice(idx, 1);
+    elem.classList.remove('selected');
+    elem.querySelector('input[type="checkbox"]').checked = false;
+  } else {
+    selectedPersonnel.push(id);
+    elem.classList.add('selected');
+    elem.querySelector('input[type="checkbox"]').checked = true;
+  }
+}
+
+function updatePersonnelDisplay() {
   var list = document.getElementById('personnel-list');
   list.innerHTML = '';
   
-  allPersonnel.forEach(function(pers) {
-    var btn = document.createElement('div');
-    btn.className = 'multi-item';
-    btn.innerHTML = pers.name + '<span class="multi-item-close" onclick="removePersonnelFromSelection(\'' + pers._id + '\')">&times;</span>';
-    list.appendChild(btn);
-  });
-}
-
-function openMaterialModal() {
-  // Toggle selezione materiali (semplificato)
-  var list = document.getElementById('materials-list');
-  list.innerHTML = '';
-  
-  allMaterials.forEach(function(mat) {
-    var btn = document.createElement('div');
-    btn.className = 'multi-item';
-    btn.innerHTML = mat.name + '<span class="multi-item-close" onclick="removeMaterialFromSelection(\'' + mat._id + '\')">&times;</span>';
-    list.appendChild(btn);
+  selectedPersonnel.forEach(function(id) {
+    var pers = allPersonnel.find(function(p) { return p._id === id; });
+    if (pers) {
+      var item = document.createElement('div');
+      item.className = 'multi-item';
+      item.innerHTML = pers.name + '<span class="multi-item-close" onclick="removePersonnelFromSelection(\'' + id + '\')">&times;</span>';
+      list.appendChild(item);
+    }
   });
 }
 
 function removePersonnelFromSelection(id) {
-  selectedPersonnel = selectedPersonnel.filter(function(p) { return p !== id; });
-  openPersonnelModal();
+  var idx = selectedPersonnel.indexOf(id);
+  if (idx > -1) {
+    selectedPersonnel.splice(idx, 1);
+    updatePersonnelDisplay();
+  }
+}
+
+function openMaterialModal() {
+  // Crea modal con due tab: Materiali personalizzati + Equipment
+  var modal = '<div class="modal-overlay" id="material-modal-overlay">';
+  modal += '<div class="modal-content">';
+  modal += '<div class="modal-header">';
+  modal += '<h3>Seleziona Materiali</h3>';
+  modal += '<span class="modal-close" onclick="closeMaterialModal()">&times;</span>';
+  modal += '</div>';
+  modal += '<div class="modal-tabs">';
+  modal += '<button class="modal-tab-btn active" onclick="switchMaterialTab(\'custom\', this)">Materiali Personalizzati</button>';
+  modal += '<button class="modal-tab-btn" onclick="switchMaterialTab(\'equipment\', this)">Equipment Magazzino</button>';
+  modal += '</div>';
+  modal += '<div class="modal-body">';
+  
+  // Tab Materiali
+  modal += '<div id="material-tab-custom" class="modal-tab active">';
+  if (allMaterials.length === 0) {
+    modal += '<p style="text-align: center; color: #888;">Nessun materiale disponibile</p>';
+  } else {
+    modal += '<div class="modal-list">';
+    allMaterials.forEach(function(mat) {
+      var isSelected = selectedMaterials.indexOf(mat._id) > -1;
+      modal += '<div class="modal-item' + (isSelected ? ' selected' : '') + '" onclick="toggleMaterialSelection(\'' + mat._id + '\', this, \'material\')">';
+      modal += '<input type="checkbox"' + (isSelected ? ' checked' : '') + '> ' + mat.name + ' (' + mat.category + ')';
+      modal += '</div>';
+    });
+    modal += '</div>';
+  }
+  modal += '</div>';
+  
+  // Tab Equipment
+  modal += '<div id="material-tab-equipment" class="modal-tab">';
+  if (allEquipment.length === 0) {
+    modal += '<p style="text-align: center; color: #888;">Nessun equipment disponibile</p>';
+  } else {
+    modal += '<div class="modal-list">';
+    allEquipment.forEach(function(eq) {
+      var isSelected = selectedMaterials.indexOf(eq._id) > -1;
+      modal += '<div class="modal-item' + (isSelected ? ' selected' : '') + '" onclick="toggleMaterialSelection(\'' + eq._id + '\', this, \'equipment\')">';
+      modal += '<input type="checkbox"' + (isSelected ? ' checked' : '') + '> ' + eq.name + ' (' + eq.category + ') - Q: ' + eq.quantity;
+      modal += '</div>';
+    });
+    modal += '</div>';
+  }
+  modal += '</div>';
+  
+  modal += '</div>';
+  modal += '<div class="modal-footer">';
+  modal += '<button class="btn-secondary" onclick="closeMaterialModal()">Chiudi</button>';
+  modal += '</div>';
+  modal += '</div>';
+  modal += '</div>';
+  
+  document.body.insertAdjacentHTML('beforeend', modal);
+  updateMaterialDisplay();
+}
+
+function closeMaterialModal() {
+  var overlay = document.getElementById('material-modal-overlay');
+  if (overlay) overlay.remove();
+}
+
+function switchMaterialTab(tabName, elem) {
+  var tabs = document.querySelectorAll('.modal-tab');
+  var btns = document.querySelectorAll('.modal-tab-btn');
+  
+  tabs.forEach(function(tab) { tab.classList.remove('active'); });
+  btns.forEach(function(btn) { btn.classList.remove('active'); });
+  
+  document.getElementById('material-tab-' + tabName).classList.add('active');
+  elem.classList.add('active');
+}
+
+function toggleMaterialSelection(id, elem, type) {
+  var idx = selectedMaterials.indexOf(id);
+  if (idx > -1) {
+    selectedMaterials.splice(idx, 1);
+    elem.classList.remove('selected');
+    elem.querySelector('input[type="checkbox"]').checked = false;
+  } else {
+    selectedMaterials.push(id);
+    elem.classList.add('selected');
+    elem.querySelector('input[type="checkbox"]').checked = true;
+  }
+}
+
+function updateMaterialDisplay() {
+  var list = document.getElementById('materials-list');
+  list.innerHTML = '';
+  
+  selectedMaterials.forEach(function(id) {
+    var mat = allMaterials.find(function(m) { return m._id === id; });
+    var eq = allEquipment.find(function(e) { return e._id === id; });
+    var item = mat || eq;
+    
+    if (item) {
+      var div = document.createElement('div');
+      div.className = 'multi-item';
+      div.innerHTML = item.name + '<span class="multi-item-close" onclick="removeMaterialFromSelection(\'' + id + '\')">&times;</span>';
+      list.appendChild(div);
+    }
+  });
 }
 
 function removeMaterialFromSelection(id) {
-  selectedMaterials = selectedMaterials.filter(function(m) { return m !== id; });
-  openMaterialModal();
+  var idx = selectedMaterials.indexOf(id);
+  if (idx > -1) {
+    selectedMaterials.splice(idx, 1);
+    updateMaterialDisplay();
+  }
 }
