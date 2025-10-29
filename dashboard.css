@@ -5,10 +5,10 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.5rem;
   background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
   border-radius: 8px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
   border: 1px solid #333;
   color: #00BCD4;
   font-family: 'Poppins', sans-serif;
@@ -56,7 +56,8 @@ main h2 {
   text-align: center;
   font-size: 1.8rem;
   color: #00BCD4;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem;
+  margin-top: 0;
   text-transform: uppercase;
   letter-spacing: 2px;
   font-family: 'Poppins', sans-serif;
@@ -66,14 +67,14 @@ main h2 {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
   padding: 0 1rem;
 }
 
 .stat-card {
   background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-radius: 8px;
   border-left: 4px solid #00BCD4;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -85,9 +86,9 @@ main h2 {
 }
 
 .stat-card h3 {
-  margin: 0 0 0.8rem 0;
+  margin: 0 0 0.6rem 0;
   color: #888;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-family: 'Poppins', sans-serif;
@@ -96,7 +97,7 @@ main h2 {
 
 .stat-value {
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 2rem;
   color: #00BCD4;
   font-weight: bold;
 }
@@ -104,14 +105,14 @@ main h2 {
 .dashboard-sections {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1.2rem;
   padding: 0 1rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .dashboard-section {
   background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-radius: 8px;
   border: 1px solid #333;
 }
@@ -119,8 +120,8 @@ main h2 {
 .dashboard-section h3 {
   color: #00BCD4;
   margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-family: 'Poppins', sans-serif;
@@ -151,7 +152,7 @@ main h2 {
 
 /* Stili per lavori attivi oggi */
 .active-job-item {
-  padding: 1rem;
+  padding: 0.8rem;
   background: linear-gradient(135deg, rgba(0, 188, 212, 0.08) 0%, rgba(0, 188, 212, 0.03) 100%);
   border-radius: 8px;
   border-left: 4px solid #00BCD4;
@@ -168,15 +169,15 @@ main h2 {
 .active-job-item .job-name {
   font-weight: 700;
   color: #00BCD4;
-  font-size: 1rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
   font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .active-job-item .job-info {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #aaa;
   display: flex;
   gap: 0.5rem;
