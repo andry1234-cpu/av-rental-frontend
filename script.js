@@ -61,6 +61,56 @@ async function loadEquipment(retryCount = 0) {
   }
 }
 
+function showSpecsModal(item) {
+  const modal = document.getElementById('specs-modal');
+  const title = document.getElementById('modal-title');
+  const content = document.getElementById('specs-content');
+  
+  title.textContent = item.name;
+  content.innerHTML = '';
+
+  // Funzione helper per aggiungere una specifica
+  const addSpec = (label, value, unit = '') => {
+    if (value !== undefined && value !== null) {
+      const specItem = document.createElement('div');
+      specItem.className = 'spec-item';
+      specItem.innerHTML = `
+        <div class="spec-label">${label}</div>
+        <div class="spec-value">${value}${unit}</div>
+      `;
+      content.appendChild(specItem);
+    }
+  };
+
+  // Aggiungi le specifiche
+  if (item.weight) {
+    addSpec('Peso', item.weight.value, ` ${item.weight.unit}`);
+  }
+  
+  if (item.dimensions) {
+    addSpec('Dimensioni', 
+      `${item.dimensions.length}x${item.dimensions.width}x${item.dimensions.height}`,
+      ` ${item.dimensions.unit}`
+    );
+  }
+  
+  if (item.powerConsumption) {
+    addSpec('Consumo', item.powerConsumption.value, ' W');
+  }
+
+  if (item.voltage) {
+    addSpec('Voltaggio', item.voltage.value, ' V');
+  }
+
+  if (item.technicalSpecs) {
+    Object.entries(item.technicalSpecs).forEach(([key, value]) => {
+      addSpec(key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'), value);
+    });
+  }
+
+  modal.classList.add('active');
+}
+
 function displayEquipment(categoryFilter) {
   const grid = document.getElementById('equipment-grid');
   grid.innerHTML = ''; // Pulisce il contenuto esistente
@@ -70,6 +120,9 @@ function displayEquipment(categoryFilter) {
       const card = document.createElement('div');
       card.className = 'card';
       card.setAttribute('data-category', item.category);
+
+      // Aggiungi evento click per mostrare il modal
+      card.addEventListener('click', () => showSpecsModal(item));
 
       const imageContainer = document.createElement('div');
       imageContainer.className = 'image-container';
@@ -140,6 +193,33 @@ function setupFilters() {
   });
 }
 
+// Gestione chiusura modal
+function closeModal() {
+  const modal = document.getElementById('specs-modal');
+  modal.classList.remove('active');
+}
+
+// Setup eventi modal
+function setupModalEvents() {
+  // Click sul bottone di chiusura
+  document.querySelector('.modal-close').addEventListener('click', closeModal);
+  
+  // Click fuori dal modal
+  document.getElementById('specs-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'specs-modal') {
+      closeModal();
+    }
+  });
+  
+  // Chiusura con tasto ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('specs-modal').classList.contains('active')) {
+      closeModal();
+    }
+  });
+}
+
 // Inizializzazione
 loadEquipment();
 setupFilters();
+setupModalEvents();
