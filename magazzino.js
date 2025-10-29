@@ -230,7 +230,118 @@ function setupModalEvents() {
   });
 }
 
+function displayEquipmentTable(categoryFilter, searchTerm) {
+  console.log('Visualizzazione tabella, filtro:', categoryFilter, 'ricerca:', searchTerm);
+  
+  const tableContainer = document.getElementById('equipment-table');
+  tableContainer.innerHTML = '';
+
+  if (!Array.isArray(equipmentData) || equipmentData.length === 0) {
+    tableContainer.innerHTML = '<div class="error">Nessun articolo trovato.</div>';
+    return;
+  }
+
+  var table = document.createElement('table');
+  table.className = 'equipment-table';
+
+  var thead = document.createElement('thead');
+  var headerRow = document.createElement('tr');
+  
+  var headers = ['Immagine', 'Nome', 'Categoria', 'Quantità'];
+  var i;
+  for (i = 0; i < headers.length; i++) {
+    var th = document.createElement('th');
+    th.textContent = headers[i];
+    headerRow.appendChild(th);
+  }
+  
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  var tbody = document.createElement('tbody');
+
+  for (i = 0; i < equipmentData.length; i++) {
+    var item = equipmentData[i];
+    var categoryMatch = categoryFilter === 'all' || item.category === categoryFilter;
+    var searchMatch = !searchTerm || item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+    
+    if (categoryMatch && searchMatch) {
+      var row = document.createElement('tr');
+      row.addEventListener('click', (function(currentItem) {
+        return function() { showSpecsModal(currentItem); };
+      })(item));
+
+      var imgCell = document.createElement('td');
+      var img = document.createElement('img');
+      img.src = item.imageUrl || 'fallback.jpg';
+      img.alt = item.name;
+      imgCell.appendChild(img);
+      row.appendChild(imgCell);
+
+      var nameCell = document.createElement('td');
+      nameCell.textContent = item.name;
+      row.appendChild(nameCell);
+
+      var categoryCell = document.createElement('td');
+      categoryCell.className = 'category ' + item.category;
+      categoryCell.textContent = item.category;
+      row.appendChild(categoryCell);
+
+      var quantityCell = document.createElement('td');
+      quantityCell.className = 'quantity';
+      quantityCell.textContent = item.quantity;
+      row.appendChild(quantityCell);
+
+      tbody.appendChild(row);
+    }
+  }
+
+  table.appendChild(tbody);
+  tableContainer.appendChild(table);
+}
+
+function setupLayoutToggle() {
+  var cardsBtn = document.getElementById('layout-cards');
+  var tableBtn = document.getElementById('layout-table');
+  var grid = document.getElementById('equipment-grid');
+  var table = document.getElementById('equipment-table');
+  var currentLayout = 'cards';
+
+  cardsBtn.addEventListener('click', function() {
+    currentLayout = 'cards';
+    cardsBtn.classList.add('active');
+    tableBtn.classList.remove('active');
+    grid.style.display = '';
+    table.style.display = 'none';
+    
+    var searchTerm = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
+    var activeCategory = 'all';
+    var activeButton = document.querySelector('.filter-btn.active');
+    if (activeButton) {
+      activeCategory = activeButton.getAttribute('data-category');
+    }
+    displayEquipment(activeCategory, searchTerm);
+  });
+
+  tableBtn.addEventListener('click', function() {
+    currentLayout = 'table';
+    tableBtn.classList.add('active');
+    cardsBtn.classList.remove('active');
+    grid.style.display = 'none';
+    table.style.display = '';
+    
+    var searchTerm = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
+    var activeCategory = 'all';
+    var activeButton = document.querySelector('.filter-btn.active');
+    if (activeButton) {
+      activeCategory = activeButton.getAttribute('data-category');
+    }
+    displayEquipmentTable(activeCategory, searchTerm);
+  });
+}
+
 loadEquipment();
 setupFilters();
 setupSearch();
 setupModalEvents();
+setupLayoutToggle();
