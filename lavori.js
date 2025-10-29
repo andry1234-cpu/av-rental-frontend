@@ -48,54 +48,85 @@ function setupFormListeners() {
   document.getElementById('material-form').addEventListener('submit', createMaterial);
   
   // Archive filters - auto-apply on change
-  var filterYear = document.getElementById('filter-year');
-  var filterMonth = document.getElementById('filter-month');
   var filterSearch = document.getElementById('filter-search');
   var resetBtn = document.getElementById('reset-filters-btn');
   
-  if (filterYear) filterYear.addEventListener('change', applyJobFilters);
-  if (filterMonth) filterMonth.addEventListener('change', applyJobFilters);
   if (filterSearch) filterSearch.addEventListener('input', applyJobFilters);
   if (resetBtn) resetBtn.addEventListener('click', clearJobFilters);
   
-  // Populate year dropdown on page load
-  populateYearDropdown();
+  // Populate year and month checkboxes on page load
+  populateYearCheckboxes();
+  populateMonthCheckboxes();
 }
 
 // ===== ARCHIVE FILTERS =====
-function populateYearDropdown() {
+function populateYearCheckboxes() {
   var currentYear = new Date().getFullYear();
-  var filterYear = document.getElementById('filter-year');
+  var filterYearsContainer = document.getElementById('filter-years');
   
-  if (!filterYear) return;
+  if (!filterYearsContainer) return;
   
-  filterYear.innerHTML = '<option value="">-- Tutti gli anni --</option>';
+  filterYearsContainer.innerHTML = '';
   
   // Aggiungi anni da -5 a +2
   for (var i = currentYear - 5; i <= currentYear + 2; i++) {
-    var option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    filterYear.appendChild(option);
+    var checkbox = document.createElement('div');
+    checkbox.className = 'filter-checkbox';
+    checkbox.innerHTML = '<input type="checkbox" class="year-filter" value="' + i + '" id="year-' + i + '">' +
+                         '<label for="year-' + i + '">' + i + '</label>';
+    
+    checkbox.querySelector('input').addEventListener('change', applyJobFilters);
+    filterYearsContainer.appendChild(checkbox);
   }
 }
 
+function populateMonthCheckboxes() {
+  var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  var filterMonthsContainer = document.getElementById('filter-months');
+  
+  if (!filterMonthsContainer) return;
+  
+  filterMonthsContainer.innerHTML = '';
+  
+  months.forEach(function(month, index) {
+    var checkbox = document.createElement('div');
+    checkbox.className = 'filter-checkbox';
+    checkbox.innerHTML = '<input type="checkbox" class="month-filter" value="' + index + '" id="month-' + index + '">' +
+                         '<label for="month-' + index + '">' + month + '</label>';
+    
+    checkbox.querySelector('input').addEventListener('change', applyJobFilters);
+    filterMonthsContainer.appendChild(checkbox);
+  });
+}
+
 function applyJobFilters() {
-  var year = document.getElementById('filter-year').value;
-  var month = document.getElementById('filter-month').value;
+  // Ottieni anni selezionati
+  var selectedYears = [];
+  document.querySelectorAll('.year-filter:checked').forEach(function(cb) {
+    selectedYears.push(parseInt(cb.value));
+  });
+  
+  // Ottieni mesi selezionati
+  var selectedMonths = [];
+  document.querySelectorAll('.month-filter:checked').forEach(function(cb) {
+    selectedMonths.push(parseInt(cb.value));
+  });
+  
+  // Ottieni termine ricerca
   var searchTerm = document.getElementById('filter-search').value.toLowerCase();
   
   var filtered = allJobs.filter(function(job) {
-    // Filtra per anno se selezionato
-    if (year) {
+    // Filtra per anno se selezionato (se nessun anno selezionato, include tutti)
+    if (selectedYears.length > 0) {
       var jobYear = new Date(job.startDate).getFullYear();
-      if (jobYear != year) return false;
+      if (selectedYears.indexOf(jobYear) === -1) return false;
     }
     
-    // Filtra per mese se selezionato
-    if (month !== '') {
+    // Filtra per mese se selezionato (se nessun mese selezionato, include tutti)
+    if (selectedMonths.length > 0) {
       var jobMonth = new Date(job.startDate).getMonth();
-      if (jobMonth != month) return false;
+      if (selectedMonths.indexOf(jobMonth) === -1) return false;
     }
     
     // Filtra per nome se inserito
@@ -110,8 +141,10 @@ function applyJobFilters() {
 }
 
 function clearJobFilters() {
-  document.getElementById('filter-year').value = '';
-  document.getElementById('filter-month').value = '';
+  // Deseleziona tutti i checkbox
+  document.querySelectorAll('.year-filter, .month-filter').forEach(function(cb) {
+    cb.checked = false;
+  });
   document.getElementById('filter-search').value = '';
   displayArchivedJobs(allJobs);
 }
