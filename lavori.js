@@ -46,6 +46,99 @@ function setupFormListeners() {
   document.getElementById('responsibile-form').addEventListener('submit', createResponsibile);
   document.getElementById('personnel-form').addEventListener('submit', createPersonnel);
   document.getElementById('material-form').addEventListener('submit', createMaterial);
+  
+  // Archive filters
+  var applyBtn = document.getElementById('apply-filters-btn');
+  var resetBtn = document.getElementById('reset-filters-btn');
+  if (applyBtn) applyBtn.addEventListener('click', applyJobFilters);
+  if (resetBtn) resetBtn.addEventListener('click', clearJobFilters);
+  
+  // Populate year dropdown on page load
+  populateYearDropdown();
+}
+
+// ===== ARCHIVE FILTERS =====
+function populateYearDropdown() {
+  var currentYear = new Date().getFullYear();
+  var filterYear = document.getElementById('filter-year');
+  
+  if (!filterYear) return;
+  
+  filterYear.innerHTML = '<option value="">-- Tutti gli anni --</option>';
+  
+  // Aggiungi anni da -5 a +2
+  for (var i = currentYear - 5; i <= currentYear + 2; i++) {
+    var option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    filterYear.appendChild(option);
+  }
+}
+
+function applyJobFilters() {
+  var year = document.getElementById('filter-year').value;
+  var month = document.getElementById('filter-month').value;
+  var searchTerm = document.getElementById('filter-search').value.toLowerCase();
+  
+  var filtered = allJobs.filter(function(job) {
+    // Filtra per anno se selezionato
+    if (year) {
+      var jobYear = new Date(job.startDate).getFullYear();
+      if (jobYear != year) return false;
+    }
+    
+    // Filtra per mese se selezionato
+    if (month !== '') {
+      var jobMonth = new Date(job.startDate).getMonth();
+      if (jobMonth != month) return false;
+    }
+    
+    // Filtra per nome se inserito
+    if (searchTerm) {
+      if (!job.name.toLowerCase().includes(searchTerm)) return false;
+    }
+    
+    return true;
+  });
+  
+  displayArchivedJobs(filtered);
+}
+
+function clearJobFilters() {
+  document.getElementById('filter-year').value = '';
+  document.getElementById('filter-month').value = '';
+  document.getElementById('filter-search').value = '';
+  displayArchivedJobs(allJobs);
+}
+
+function displayArchivedJobs(jobs) {
+  var archiveList = document.getElementById('jobs-archive');
+  if (!archiveList) return;
+  
+  if (jobs.length === 0) {
+    archiveList.innerHTML = '<p style="padding: 2rem; color: #00BCD4; text-align: center;">Nessun lavoro trovato</p>';
+    return;
+  }
+  
+  archiveList.innerHTML = '';
+  
+  jobs.forEach(function(job) {
+    var startDate = new Date(job.startDate).toLocaleDateString('it-IT');
+    var endDate = new Date(job.endDate).toLocaleDateString('it-IT');
+    
+    var responsibleName = job.responsibile ? (job.responsibile.name || 'N/A') : 'N/A';
+    
+    var jobCard = document.createElement('div');
+    jobCard.className = 'job-archive-card';
+    jobCard.style.cssText = 'padding: 1rem; background: rgba(0,188,212,0.08); border-left: 3px solid #00BCD4; margin-bottom: 0.8rem; border-radius: 5px;';
+    
+    jobCard.innerHTML = '<h4 style="margin: 0 0 0.5rem 0; color: #f0f0f0; font-family: Poppins, sans-serif;">' + job.name + '</h4>' +
+      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Data:</strong> ' + startDate + ' - ' + endDate + '</p>' +
+      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Responsabile:</strong> ' + responsibleName + '</p>' +
+      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #00BCD4;"><strong>Stato:</strong> ' + (job.status || 'sconosciuto') + '</p>';
+    
+    archiveList.appendChild(jobCard);
+  });
 }
 
 // ===== LOAD DATA =====
@@ -94,6 +187,7 @@ async function loadJobs() {
     var res = await fetch(API_BASE);
     allJobs = await res.json();
     displayJobs();
+    displayArchivedJobs(allJobs);
   } catch (error) {
     console.error('Errore caricamento lavori:', error);
   }

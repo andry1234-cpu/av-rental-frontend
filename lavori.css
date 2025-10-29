@@ -91,6 +91,57 @@ main h4 {
   to { opacity: 1; }
 }
 
+/* ARCHIVE FILTERS */
+.archive-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 188, 212, 0.08);
+  border-radius: 8px;
+  border-left: 4px solid #00BCD4;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.filter-group label {
+  color: #00BCD4;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #00BCD4;
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.2);
+}
+
+.filter-group input {
+  min-width: 200px;
+}
+
 /* FORMS */
 .job-form {
   display: flex;
