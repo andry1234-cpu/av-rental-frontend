@@ -405,6 +405,10 @@ main h4 {
   overflow: hidden;
 }
 
+.modal-content.modal-large {
+  max-width: 800px;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -511,5 +515,111 @@ main h4 {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+}
+
+/* EQUIPMENT MODAL STYLES */
+.equipment-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.equipment-category {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #00BCD4;
+}
+
+.category-title {
+  font-size: 1rem;
+  color: #00BCD4;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.equipment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f1f;
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #333;
+  transition: all 0.2s ease;
+}
+
+.equipment-item:hover {
+  border-color: #00BCD4;
+  background: #252525;
+}
+
+.equipment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.equipment-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.equipment-available {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.equipment-qty {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.qty-btn,
+.qty-btn-add {
+  padding: 0.5rem 0.8rem;
+  background: #00BCD4;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.qty-btn:hover,
+.qty-btn-add:hover {
+  background: #00D4E8;
+  transform: scale(1.05);
+}
+
+.qty-input {
+  width: 60px;
+  padding: 0.5rem;
+  background: #2a2a2a;
+  border: 1px solid #00BCD4;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.qty-input:focus {
+  outline: none;
+  border-color: #00D4E8;
+  background: #333;
 }
 

@@ -116,6 +116,14 @@ function populateResponsibileSelect() {
 async function createJob(e) {
   e.preventDefault();
   
+  // Converti selectedMaterials in formato equipment con quantità
+  var equipment = selectedMaterials.map(function(item) {
+    if (typeof item === 'object') {
+      return { equipmentId: item.id, quantity: item.qty };
+    }
+    return item;
+  });
+  
   var jobData = {
     name: document.getElementById('job-name').value,
     startDate: document.getElementById('job-start-date').value,
@@ -123,7 +131,7 @@ async function createJob(e) {
     location: document.getElementById('job-location').value,
     responsibile: document.getElementById('job-responsibile').value,
     personnel: selectedPersonnel,
-    materials: selectedMaterials,
+    equipment: equipment,
     notes: document.getElementById('job-notes').value,
     status: 'confirmed'
   };
@@ -140,6 +148,7 @@ async function createJob(e) {
       document.getElementById('new-job-form').reset();
       selectedPersonnel = [];
       selectedMaterials = [];
+      selectedEquipment = [];
       document.getElementById('personnel-list').innerHTML = '';
       document.getElementById('materials-list').innerHTML = '';
       loadJobs();
@@ -398,50 +407,63 @@ function removePersonnelFromSelection(id) {
 }
 
 function openMaterialModal() {
-  // Crea modal con due tab: Materiali personalizzati + Equipment
+  // Raggruppa equipment per categoria
+  var categories = {};
+  allEquipment.forEach(function(eq) {
+    if (!categories[eq.category]) {
+      categories[eq.category] = [];
+    }
+    categories[eq.category].push(eq);
+  });
+  
   var modal = '<div class="modal-overlay" id="material-modal-overlay">';
-  modal += '<div class="modal-content">';
+  modal += '<div class="modal-content modal-large">';
   modal += '<div class="modal-header">';
-  modal += '<h3>Seleziona Materiali</h3>';
+  modal += '<h3>Seleziona Equipment</h3>';
   modal += '<span class="modal-close" onclick="closeMaterialModal()">&times;</span>';
-  modal += '</div>';
-  modal += '<div class="modal-tabs">';
-  modal += '<button class="modal-tab-btn active" onclick="switchMaterialTab(\'custom\', this)">Materiali Personalizzati</button>';
-  modal += '<button class="modal-tab-btn" onclick="switchMaterialTab(\'equipment\', this)">Equipment Magazzino</button>';
   modal += '</div>';
   modal += '<div class="modal-body">';
   
-  // Tab Materiali
-  modal += '<div id="material-tab-custom" class="modal-tab active">';
-  if (allMaterials.length === 0) {
-    modal += '<p style="text-align: center; color: #888;">Nessun materiale disponibile</p>';
-  } else {
-    modal += '<div class="modal-list">';
-    allMaterials.forEach(function(mat) {
-      var isSelected = selectedMaterials.indexOf(mat._id) > -1;
-      modal += '<div class="modal-item' + (isSelected ? ' selected' : '') + '" onclick="toggleMaterialSelection(\'' + mat._id + '\', this, \'material\')">';
-      modal += '<input type="checkbox"' + (isSelected ? ' checked' : '') + '> ' + mat.name + ' (' + mat.category + ')';
-      modal += '</div>';
-    });
-    modal += '</div>';
-  }
-  modal += '</div>';
-  
-  // Tab Equipment
-  modal += '<div id="material-tab-equipment" class="modal-tab">';
   if (allEquipment.length === 0) {
     modal += '<p style="text-align: center; color: #888;">Nessun equipment disponibile</p>';
   } else {
-    modal += '<div class="modal-list">';
-    allEquipment.forEach(function(eq) {
-      var isSelected = selectedMaterials.indexOf(eq._id) > -1;
-      modal += '<div class="modal-item' + (isSelected ? ' selected' : '') + '" onclick="toggleMaterialSelection(\'' + eq._id + '\', this, \'equipment\')">';
-      modal += '<input type="checkbox"' + (isSelected ? ' checked' : '') + '> ' + eq.name + ' (' + eq.category + ') - Q: ' + eq.quantity;
+    modal += '<div class="equipment-categories">';
+    
+    // Ordina categorie alfabeticamente
+    var sortedCategories = Object.keys(categories).sort();
+    
+    sortedCategories.forEach(function(category) {
+      modal += '<div class="equipment-category">';
+      modal += '<h4 class="category-title">' + category + '</h4>';
+      modal += '<div class="equipment-list">';
+      
+      categories[category].forEach(function(eq) {
+        var selectedQty = getSelectedEquipmentQty(eq._id);
+        modal += '<div class="equipment-item">';
+        modal += '<div class="equipment-info">';
+        modal += '<span class="equipment-name">' + eq.name + '</span>';
+        modal += '<span class="equipment-available">Disponibile: ' + eq.quantity + '</span>';
+        modal += '</div>';
+        modal += '<div class="equipment-qty">';
+        
+        if (selectedQty > 0) {
+          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', -1)">−</button>';
+          modal += '<input type="number" class="qty-input" value="' + selectedQty + '" min="0" onchange="updateEquipmentQtyDirect(\'' + eq._id + '\', this.value)">';
+          modal += '<button type="button" class="qty-btn" onclick="updateEquipmentQty(\'' + eq._id + '\', 1)">+</button>';
+        } else {
+          modal += '<button type="button" class="qty-btn-add" onclick="updateEquipmentQty(\'' + eq._id + '\', 1)">Aggiungi</button>';
+        }
+        
+        modal += '</div>';
+        modal += '</div>';
+      });
+      
+      modal += '</div>';
       modal += '</div>';
     });
+    
     modal += '</div>';
   }
-  modal += '</div>';
   
   modal += '</div>';
   modal += '<div class="modal-footer">';
@@ -483,28 +505,75 @@ function toggleMaterialSelection(id, elem, type) {
   }
 }
 
+function getSelectedEquipmentQty(equipmentId) {
+  var existing = selectedMaterials.find(function(item) {
+    return typeof item === 'object' && item.id === equipmentId;
+  });
+  return existing ? existing.qty : 0;
+}
+
+function updateEquipmentQty(equipmentId, change) {
+  var currentQty = getSelectedEquipmentQty(equipmentId);
+  var newQty = Math.max(0, currentQty + change);
+  
+  var idx = selectedMaterials.findIndex(function(item) {
+    return typeof item === 'object' && item.id === equipmentId;
+  });
+  
+  if (newQty === 0) {
+    if (idx > -1) selectedMaterials.splice(idx, 1);
+  } else {
+    if (idx > -1) {
+      selectedMaterials[idx].qty = newQty;
+    } else {
+      selectedMaterials.push({ id: equipmentId, qty: newQty });
+    }
+  }
+  
+  // Riapri il modal con valori aggiornati
+  closeMaterialModal();
+  openMaterialModal();
+}
+
+function updateEquipmentQtyDirect(equipmentId, value) {
+  var newQty = Math.max(0, parseInt(value) || 0);
+  
+  var idx = selectedMaterials.findIndex(function(item) {
+    return typeof item === 'object' && item.id === equipmentId;
+  });
+  
+  if (newQty === 0) {
+    if (idx > -1) selectedMaterials.splice(idx, 1);
+  } else {
+    if (idx > -1) {
+      selectedMaterials[idx].qty = newQty;
+    } else {
+      selectedMaterials.push({ id: equipmentId, qty: newQty });
+    }
+  }
+}
+
 function updateMaterialDisplay() {
   var list = document.getElementById('materials-list');
   list.innerHTML = '';
   
-  selectedMaterials.forEach(function(id) {
-    var mat = allMaterials.find(function(m) { return m._id === id; });
-    var eq = allEquipment.find(function(e) { return e._id === id; });
-    var item = mat || eq;
-    
-    if (item) {
-      var div = document.createElement('div');
-      div.className = 'multi-item';
-      div.innerHTML = item.name + '<span class="multi-item-close" onclick="removeMaterialFromSelection(\'' + id + '\')">&times;</span>';
-      list.appendChild(div);
+  selectedMaterials.forEach(function(item) {
+    if (typeof item === 'object') {
+      var eq = allEquipment.find(function(e) { return e._id === item.id; });
+      if (eq) {
+        var div = document.createElement('div');
+        div.className = 'multi-item';
+        div.innerHTML = eq.name + ' (Q: ' + item.qty + ')<span class="multi-item-close" onclick="removeMaterialFromSelection(\'' + item.id + '\')">&times;</span>';
+        list.appendChild(div);
+      }
     }
   });
 }
 
 function removeMaterialFromSelection(id) {
-  var idx = selectedMaterials.indexOf(id);
-  if (idx > -1) {
-    selectedMaterials.splice(idx, 1);
-    updateMaterialDisplay();
-  }
+  selectedMaterials = selectedMaterials.filter(function(item) {
+    if (typeof item === 'object') return item.id !== id;
+    return item !== id;
+  });
+  updateMaterialDisplay();
 }
