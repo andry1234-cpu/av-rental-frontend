@@ -136,6 +136,9 @@ async function createJob(e) {
     status: 'confirmed'
   };
   
+  console.log('Dati job da inviare:', jobData);
+  console.log('URL endpoint:', API_BASE);
+  
   try {
     var res = await fetch(API_BASE, {
       method: 'POST',
@@ -153,11 +156,13 @@ async function createJob(e) {
       document.getElementById('materials-list').innerHTML = '';
       loadJobs();
     } else {
-      alert('Errore nella creazione del lavoro');
+      var errorResponse = await res.json();
+      console.error('Errore risposta server:', res.status, errorResponse);
+      alert('Errore nella creazione del lavoro: ' + (errorResponse.error || res.statusText));
     }
   } catch (error) {
     console.error('Errore:', error);
-    alert('Errore nella creazione del lavoro');
+    alert('Errore nella creazione del lavoro: ' + error.message);
   }
 }
 
