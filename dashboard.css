@@ -11,19 +11,21 @@
   margin-bottom: 1.5rem;
   border: 1px solid #333;
   color: #00BCD4;
+  font-family: 'Poppins', sans-serif;
 }
 
 .date-time-header h2 {
   margin: 0;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  font-family: 'Poppins', sans-serif;
 }
 
 .date-time-header .time {
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   font-family: 'Courier New', monospace;
   letter-spacing: 1px;
   white-space: nowrap;
@@ -31,10 +33,11 @@
 
 .date-time-header .weekday {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   white-space: nowrap;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Colori per festivi e domenica */
@@ -56,6 +59,8 @@ main h2 {
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 .stats-grid {
@@ -85,6 +90,8 @@ main h2 {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
 }
 
 .stat-value {
@@ -116,6 +123,8 @@ main h2 {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 #category-stats {

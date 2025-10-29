@@ -7,6 +7,8 @@ main h2 {
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 .filters {
@@ -53,7 +55,7 @@ main h2 {
   border: none;
   border-radius: 20px;
   font-size: 0.85rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 110px;
@@ -62,6 +64,7 @@ main h2 {
   letter-spacing: 0.5px;
   opacity: 0.35;
   filter: grayscale(70%);
+  font-family: 'Poppins', sans-serif;
 }
 
 .filter-btn:hover {
@@ -207,19 +210,23 @@ main h2 {
   margin: 0 0 0.3rem 0;
   color: #00BCD4;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 .info p {
   margin: 0.5rem 0;
   color: #ccc;
   font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .info .category {
   color: #FF5252;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 0.9rem;
   text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
 }
 
 .quantity {

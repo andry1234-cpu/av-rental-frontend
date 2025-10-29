@@ -7,6 +7,8 @@ main h2 {
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 main h3 {
@@ -15,6 +17,8 @@ main h3 {
   margin-bottom: 1rem;
   border-bottom: 2px solid #00BCD4;
   padding-bottom: 0.3rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 main h4 {
@@ -23,6 +27,8 @@ main h4 {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 .jobs-container {
@@ -47,13 +53,14 @@ main h4 {
   background: #1f1f1f;
   color: #888;
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 3px solid transparent;
   opacity: 0.6;
+  font-family: 'Poppins', sans-serif;
 }
 
 .tab-btn:hover {
@@ -104,11 +111,12 @@ main h4 {
 
 .form-group label {
   color: #00BCD4;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 0.3rem;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-group input,
@@ -173,12 +181,13 @@ main h4 {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 5px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .btn-primary {
@@ -454,6 +463,8 @@ main h4 {
   border-bottom: 2px solid transparent;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .modal-tab-btn.active {

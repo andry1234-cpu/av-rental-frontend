@@ -2,10 +2,16 @@
 
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   background: #121212;
   color: #f0f0f0;
   font-size: 16px;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
 }
 
 /* HEADER CON MENU */
@@ -32,6 +38,9 @@ header {
   font-size: 1.6rem;
   color: #00BCD4;
   letter-spacing: 2px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 nav.main-nav {
@@ -43,13 +52,14 @@ nav.main-nav {
   padding: 0.6rem 1.2rem;
   text-decoration: none;
   color: #f0f0f0;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.8rem;
   transition: all 0.3s ease;
   border-bottom: 3px solid transparent;
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .nav-link:hover {
