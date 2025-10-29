@@ -345,6 +345,12 @@ main h2 {
   text-align: center;
   padding: 3rem;
   font-size: 1.1rem;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
 }
 
 .error {
