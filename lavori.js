@@ -47,10 +47,15 @@ function setupFormListeners() {
   document.getElementById('personnel-form').addEventListener('submit', createPersonnel);
   document.getElementById('material-form').addEventListener('submit', createMaterial);
   
-  // Archive filters
-  var applyBtn = document.getElementById('apply-filters-btn');
+  // Archive filters - auto-apply on change
+  var filterYear = document.getElementById('filter-year');
+  var filterMonth = document.getElementById('filter-month');
+  var filterSearch = document.getElementById('filter-search');
   var resetBtn = document.getElementById('reset-filters-btn');
-  if (applyBtn) applyBtn.addEventListener('click', applyJobFilters);
+  
+  if (filterYear) filterYear.addEventListener('change', applyJobFilters);
+  if (filterMonth) filterMonth.addEventListener('change', applyJobFilters);
+  if (filterSearch) filterSearch.addEventListener('input', applyJobFilters);
   if (resetBtn) resetBtn.addEventListener('click', clearJobFilters);
   
   // Populate year dropdown on page load
