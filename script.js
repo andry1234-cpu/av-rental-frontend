@@ -30,9 +30,19 @@ async function loadEquipment(retryCount = 0) {
   const grid = document.getElementById('equipment-grid');
   try {
     if (retryCount === 0) {
-      grid.innerHTML = '<div class="loading">Caricamento in corso...</div>';
+      grid.innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Caricamento in corso...</p>
+          <p class="loading-info">Il server potrebbe impiegare fino a 50 secondi per riattivarsi se era inattivo.</p>
+        </div>`;
     } else {
-      grid.innerHTML = '<div class="loading">Server in riavvio, attendi circa 50 secondi... (tentativo ' + (retryCount + 1) + ')</div>';
+      grid.innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Server in riavvio, attendi circa 50 secondi...</p>
+          <p class="loading-info">Tentativo ${retryCount + 1} di riconnessione</p>
+        </div>`;
     }
     
     const res = await fetch('https://av-rental-backend.onrender.com/api/equipment');
