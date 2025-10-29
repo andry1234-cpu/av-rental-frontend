@@ -15,32 +15,21 @@ async function pingServer() {
   }
 }
 
-// Funzione per mantenere il server attivo
 function startKeepAlive() {
   if (pingInterval) clearInterval(pingInterval);
-  // Ping ogni 14 minuti (il server va in sleep dopo 15 minuti di inattività)
   pingInterval = setInterval(pingServer, 14 * 60 * 1000);
 }
 
-async function loadEquipment(retryCount = 0) {
+async function loadEquipment(retryCount) {
+  if (retryCount === undefined) retryCount = 0;
   const grid = document.getElementById('equipment-grid');
   console.log('Iniziato caricamento equipment, tentativo:', retryCount);
   
   try {
     if (retryCount === 0) {
-      grid.innerHTML = `
-        <div class="loading">
-          <div class="loading-spinner"></div>
-          <p>Caricamento in corso...</p>
-          <p class="loading-info">Il server potrebbe impiegare fino a 50 secondi per riattivarsi se era inattivo.</p>
-        </div>`;
+      grid.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Caricamento in corso...</p></div>';
     } else {
-      grid.innerHTML = `
-        <div class="loading">
-          <div class="loading-spinner"></div>
-          <p>Server in riavvio, attendi circa 50 secondi...</p>
-          <p class="loading-info">Tentativo ${retryCount + 1} di riconnessione</p>
-        </div>`;
+      grid.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Tentativo ' + (retryCount + 1) + ' di riconnessione</p></div>';
     }
     
     console.log('Invio richiesta al backend...');
@@ -54,35 +43,33 @@ async function loadEquipment(retryCount = 0) {
     
     console.log('Risposta ricevuta, status:', res.status);
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      throw new Error('HTTP error! status: ' + res.status);
     }
     
     const data = await res.json();
     console.log('Dati ricevuti:', data);
     equipmentData = data;
     displayEquipment('all');
-    
-    // Se il caricamento ha successo, avvia il keep-alive
     startKeepAlive();
     
-    // Pulisci eventuali retry in sospeso
     if (retryTimeout) {
       clearTimeout(retryTimeout);
       retryTimeout = null;
     }
   } catch (error) {
     console.error('Errore nel caricamento dei dati:', error);
-    if (retryCount < 3) { // Massimo 3 tentativi
+    if (retryCount < 3) {
       grid.innerHTML = '<div class="warning">Server in riavvio, nuovo tentativo tra 10 secondi... (tentativo ' + (retryCount + 1) + ' di 3)</div>';
-      retryTimeout = setTimeout(() => loadEquipment(retryCount + 1), 10000);
+      retryTimeout = setTimeout(function() { loadEquipment(retryCount + 1); }, 10000);
     } else {
       grid.innerHTML = '<div class="error">Errore nel caricamento dei dati. Ricarica la pagina per riprovare.</div>';
     }
   }
 }
 
+
 function showSpecsModal(item) {
-  console.log('Mostrando specifiche per:', item); // Debug log
+  console.log('Mostrando specifiche per:', item);
   const modal = document.getElementById('specs-modal');
   const title = document.getElementById('modal-title');
   const content = document.getElementById('specs-content');
@@ -90,59 +77,45 @@ function showSpecsModal(item) {
   title.textContent = item.name;
   content.innerHTML = '';
 
-  // Funzione helper per aggiungere una specifica
-  const addSpec = (label, value, unit = '') => {
+  var addSpec = function(label, value, unit) {
+    if (unit === undefined) unit = '';
     if (value !== undefined && value !== null && value !== '') {
       const specItem = document.createElement('div');
       specItem.className = 'spec-item';
-      specItem.innerHTML = `
-        <div class="spec-label">${label}</div>
-        <div class="spec-value">${value}${unit}</div>
-      `;
+      specItem.innerHTML = '<div class="spec-label">' + label + '</div><div class="spec-value">' + value + unit + '</div>';
       content.appendChild(specItem);
     }
   };
 
-  // Aggiungi categoria e disponibilità
-  addSpec('Categoria', item.category);
+  addSpec('Categoria', item.category, '');
   addSpec('Disponibilità', item.quantity, ' pezzi');
 
-  // Specifiche opzionali (se presenti)
   if (item.weight && item.weight.value) {
-    addSpec('Peso', item.weight.value, ` ${item.weight.unit || ''}`);
+    addSpec('Peso', item.weight.value, ' ' + (item.weight.unit || 'kg'));
   }
 
-  if (item.dimensions) {
-    const { length, width, height, unit } = item.dimensions;
-    if (length && width && height) {
-      addSpec('Dimensioni', `${length} × ${width} × ${height}`, ` ${unit || 'cm'}`);
-    }
+  if (item.dimensions && item.dimensions.length && item.dimensions.width && item.dimensions.height) {
+    addSpec('Dimensioni', item.dimensions.length + ' × ' + item.dimensions.width + ' × ' + item.dimensions.height, ' ' + (item.dimensions.unit || 'cm'));
   }
 
   if (item.powerConsumption && item.powerConsumption.value) {
-    addSpec('Consumo', item.powerConsumption.value, ` ${item.powerConsumption.unit || 'W'}`);
+    addSpec('Consumo', item.powerConsumption.value, ' ' + (item.powerConsumption.unit || 'W'));
   }
 
   if (item.voltage && item.voltage.value) {
-    addSpec('Voltaggio', item.voltage.value, ` ${item.voltage.unit || 'V'}`);
+    addSpec('Voltaggio', item.voltage.value, ' ' + (item.voltage.unit || 'V'));
   }
 
-  if (item.technicalSpecs) {
-    Object.entries(item.technicalSpecs).forEach(([key, value]) => {
-      addSpec(key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'), value);
-    });
-  }
-
-  // Mostra il modal
   modal.classList.add('active');
 }
+
 
 function displayEquipment(categoryFilter) {
   console.log('Visualizzazione equipment, filtro:', categoryFilter);
   console.log('Dati disponibili:', equipmentData);
   
   const grid = document.getElementById('equipment-grid');
-  grid.innerHTML = ''; // Pulisce il contenuto esistente
+  grid.innerHTML = '';
 
   if (!Array.isArray(equipmentData) || equipmentData.length === 0) {
     console.log('Nessun dato da visualizzare');
@@ -150,14 +123,17 @@ function displayEquipment(categoryFilter) {
     return;
   }
 
-  equipmentData.forEach(item => {
+  var i;
+  for (i = 0; i < equipmentData.length; i++) {
+    var item = equipmentData[i];
     if (categoryFilter === 'all' || item.category === categoryFilter) {
       const card = document.createElement('div');
       card.className = 'card';
       card.setAttribute('data-category', item.category);
 
-      // Aggiungi evento click per mostrare il modal
-      card.addEventListener('click', () => showSpecsModal(item));
+      card.addEventListener('click', (function(currentItem) {
+        return function() { showSpecsModal(currentItem); };
+      })(item));
 
       const imageContainer = document.createElement('div');
       imageContainer.className = 'image-container';
@@ -178,67 +154,63 @@ function displayEquipment(categoryFilter) {
       category.textContent = item.category;
 
       const quantity = document.createElement('p');
-      quantity.textContent = `Disponibili: ${item.quantity}`;
+      quantity.textContent = 'Disponibili: ' + item.quantity;
 
-      // Aggiungiamo un pulsante per vedere le specifiche
       const specsButton = document.createElement('button');
       specsButton.className = 'specs-button';
       specsButton.textContent = 'Vedi specifiche tecniche';
-      specsButton.onclick = (e) => {
-        e.stopPropagation(); // Previene il bubbling dell'evento
-        showSpecsModal(item);
-      };
+      specsButton.onclick = (function(currentItem) {
+        return function(e) {
+          e.stopPropagation();
+          showSpecsModal(currentItem);
+        };
+      })(item);
 
-      info.append(title, category, quantity, specsButton);
-      card.append(imageContainer, info);
+      info.appendChild(title);
+      info.appendChild(category);
+      info.appendChild(quantity);
+      info.appendChild(specsButton);
+      card.appendChild(imageContainer);
+      card.appendChild(info);
       grid.appendChild(card);
     }
-  });
+  }
 }
 
-// Gestione dei filtri
+
 function setupFilters() {
   const filterButtons = document.querySelectorAll('.filter-btn');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Rimuove la classe active da tutti i bottoni
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      // Aggiunge la classe active al bottone cliccato
+  filterButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      filterButtons.forEach(function(btn) { btn.classList.remove('active'); });
       button.classList.add('active');
-      // Filtra gli elementi
       const category = button.getAttribute('data-category');
       displayEquipment(category);
     });
   });
 }
 
-// Gestione chiusura modal
 function closeModal() {
   const modal = document.getElementById('specs-modal');
   modal.classList.remove('active');
 }
 
-// Setup eventi modal
 function setupModalEvents() {
-  // Click sul bottone di chiusura
   document.querySelector('.modal-close').addEventListener('click', closeModal);
   
-  // Click fuori dal modal
-  document.getElementById('specs-modal').addEventListener('click', (e) => {
+  document.getElementById('specs-modal').addEventListener('click', function(e) {
     if (e.target.id === 'specs-modal') {
       closeModal();
     }
   });
   
-  // Chiusura con tasto ESC
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && document.getElementById('specs-modal').classList.contains('active')) {
       closeModal();
     }
   });
 }
 
-// Inizializzazione
 loadEquipment();
 setupFilters();
 setupModalEvents();
