@@ -1,5 +1,6 @@
 let equipmentData = [];
 let dashboardStats = {};
+let todayActiveJobs = [];
 let retryTimeout = null;
 let pingInterval = null;
 
@@ -45,6 +46,7 @@ async function loadDashboardStats(retryCount) {
     dashboardStats = data;
     equipmentData = data.equipment;
     displayDashboardStats();
+    loadTodayActiveJobs();
     startKeepAlive();
     
     if (retryTimeout) {
@@ -55,6 +57,36 @@ async function loadDashboardStats(retryCount) {
     console.error('Errore nel caricamento dei dati:', error);
     if (retryCount < 3) {
       retryTimeout = setTimeout(function() { loadDashboardStats(retryCount + 1); }, 10000);
+    }
+  }
+}
+
+async function loadTodayActiveJobs(retryCount) {
+  if (retryCount === undefined) retryCount = 0;
+  
+  try {
+    console.log('Caricamento lavori attivi oggi...');
+    const res = await fetch('https://av-rental-backend.onrender.com/api/jobs/stats/today', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
+    if (!res.ok) {
+      throw new Error('HTTP error! status: ' + res.status);
+    }
+    
+    const data = await res.json();
+    console.log('Lavori attivi oggi:', data);
+    todayActiveJobs = data.jobs || [];
+    displayTodayActiveJobs();
+    
+  } catch (error) {
+    console.error('Errore nel caricamento lavori attivi:', error);
+    if (retryCount < 3) {
+      setTimeout(function() { loadTodayActiveJobs(retryCount + 1); }, 5000);
     }
   }
 }
@@ -84,32 +116,43 @@ function displayDashboardStats() {
 
   // Lavori attivi
   document.getElementById('active-jobs').textContent = dashboardStats.activeJobs || 0;
+}
 
-  // Categoria con più articoli
+function displayTodayActiveJobs() {
+  console.log('Visualizzazione lavori attivi oggi', todayActiveJobs);
+  
   var categoryStats = document.getElementById('category-stats');
   categoryStats.innerHTML = '';
-
-  if (Array.isArray(equipmentData) && equipmentData.length > 0) {
-    var categoryArticles = {};
-    var i;
-    for (i = 0; i < equipmentData.length; i++) {
-      var category = equipmentData[i].category;
-      categoryArticles[category] = (categoryArticles[category] || 0) + 1;
-    }
-
-    var sortedCategories = Object.keys(categoryArticles).sort(function(a, b) {
-      return categoryArticles[b] - categoryArticles[a];
-    });
-
-    for (i = 0; i < sortedCategories.length; i++) {
-      var cat = sortedCategories[i];
-      var count = categoryArticles[cat];
-      var item = document.createElement('div');
-      item.className = 'category-stat-item';
-      item.innerHTML = '<span class="category-name">' + cat + '</span><span class="category-count">' + count + '</span>';
-      categoryStats.appendChild(item);
-    }
+  
+  if (!Array.isArray(todayActiveJobs) || todayActiveJobs.length === 0) {
+    categoryStats.innerHTML = '<div style="text-align: center; padding: 1rem; color: #888;">Nessun lavoro attivo oggi</div>';
+    return;
   }
+  
+  // Aggiungi ogni lavoro come riga
+  var i;
+  for (i = 0; i < todayActiveJobs.length; i++) {
+    var job = todayActiveJobs[i];
+    var item = document.createElement('div');
+    item.className = 'active-job-item';
+    
+    // Formatta date
+    var startDate = new Date(job.startDate);
+    var endDate = new Date(job.endDate);
+    var dateRange = formatDate(startDate) + ' - ' + formatDate(endDate);
+    
+    var responsibileName = job.responsibile ? job.responsibile.name : 'N/D';
+    
+    item.innerHTML = '<div class="job-name">' + job.name + '</div><div class="job-info"><span class="job-date">' + dateRange + '</span> | <span class="job-resp">' + responsibileName + '</span></div>';
+    categoryStats.appendChild(item);
+  }
+}
+
+function formatDate(date) {
+  var day = String(date.getDate()).padStart(2, '0');
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var year = date.getFullYear();
+  return day + '/' + month + '/' + year;
 }
 
 // Al caricamento pagina
