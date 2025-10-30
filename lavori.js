@@ -290,6 +290,23 @@ function updateWizardUI() {
   // Mostra lo step corrente
   document.getElementById('step-' + currentStep).classList.add('active');
   document.getElementById('step-' + currentStep + '-indicator').classList.add('active');
+
+  // Ripristina i valori del form dal wizardState (utile quando si naviga tra i step)
+  var saved = localStorage.getItem('wizardState');
+  if (saved) {
+    try {
+      var data = JSON.parse(saved);
+      if (data.formData) {
+        document.getElementById('job-name').value = data.formData.jobName || '';
+        document.getElementById('job-start-date').value = data.formData.jobStartDate || '';
+        document.getElementById('job-end-date').value = data.formData.jobEndDate || '';
+        document.getElementById('job-location').value = data.formData.jobLocation || '';
+        document.getElementById('job-responsibile').value = data.formData.jobResponsible || '';
+      }
+    } catch (e) {
+      // silent fail
+    }
+  }
   
   // Aggiorna pulsanti di navigazione
   var btnPrev = document.getElementById('btn-prev');
