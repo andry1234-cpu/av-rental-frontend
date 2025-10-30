@@ -1302,6 +1302,29 @@ function removePersonnelFromSelection(id) {
   }
 }
 
+function removeEquipment(idx) {
+  if (idx >= 0 && idx < selectedEquipment.length) {
+    selectedEquipment.splice(idx, 1);
+    // Aggiorna la UI della lista materiali
+    var matsListEl = document.getElementById('materials-list');
+    if (matsListEl) {
+      matsListEl.innerHTML = '';
+      if (selectedEquipment.length > 0) {
+        selectedEquipment.forEach((sel, i) => {
+          var eq = allEquipment.find(e => e._id === sel.equipmentId);
+          if (eq) {
+            var item = document.createElement('div');
+            item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: #f5f5f5; border-radius: 4px; margin-bottom: 0.5rem;';
+            item.innerHTML = '<span>' + eq.name + ' (x' + sel.quantity + ')</span>' +
+              '<button type="button" class="btn-small" onclick="removeEquipment(' + i + ')">Rimuovi</button>';
+            matsListEl.appendChild(item);
+          }
+        });
+      }
+    }
+  }
+}
+
 function openMaterialModal() {
   // Raggruppa equipment per categoria
   var categories = {};
