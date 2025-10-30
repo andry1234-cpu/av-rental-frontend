@@ -208,8 +208,7 @@ function displayArchivedJobs(jobs) {
     
     jobCard.innerHTML = '<h4 style="margin: 0 0 0.5rem 0; color: #f0f0f0; font-family: Poppins, sans-serif;">' + job.name + '</h4>' +
       '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Data:</strong> ' + startDate + ' - ' + endDate + '</p>' +
-      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Responsabile:</strong> ' + responsibleName + '</p>' +
-      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #00BCD4;"><strong>Stato:</strong> ' + (job.status || 'sconosciuto') + '</p>';
+      '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Responsabile:</strong> ' + responsibleName + '</p>';
     
     archiveList.appendChild(jobCard);
   });
