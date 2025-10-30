@@ -748,6 +748,11 @@ function populateResponsibileSelect() {
 async function createJob(e) {
   e.preventDefault();
   
+  // Se siamo in modalità edit, faccio un UPDATE invece di CREATE
+  if (isEditingJob && currentEditJobId) {
+    return updateJob(e);
+  }
+  
   // Converti selectedMaterials in formato equipment con quantità
   var equipment = selectedMaterials.map(function(item) {
     if (typeof item === 'object') {
@@ -792,6 +797,63 @@ async function createJob(e) {
   } catch (error) {
     console.error('Errore:', error);
     alert('Errore nella creazione del lavoro: ' + error.message);
+  }
+}
+
+async function updateJob(e) {
+  e.preventDefault();
+  
+  if (!currentEditJobId) {
+    alert('Errore: ID lavoro mancante');
+    return;
+  }
+  
+  // Converti selectedMaterials in formato equipment con quantità
+  var equipment = selectedMaterials.map(function(item) {
+    if (typeof item === 'object') {
+      return { equipmentId: item.id, quantity: item.qty };
+    }
+    return item;
+  });
+  
+  var jobData = {
+    name: document.getElementById('job-name').value,
+    startDate: document.getElementById('job-start-date').value,
+    endDate: document.getElementById('job-end-date').value,
+    location: document.getElementById('job-location').value,
+    responsibile: document.getElementById('job-responsibile').value,
+    personnel: selectedPersonnel,
+    equipment: equipment,
+    notes: document.getElementById('job-notes').value,
+    status: 'confirmed'
+  };
+  
+  console.log('Dati job da aggiornare:', jobData);
+  console.log('URL endpoint PUT:', API_BASE + '/' + currentEditJobId);
+  
+  try {
+    var res = await fetch(API_BASE + '/' + currentEditJobId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jobData)
+    });
+    
+    if (res.ok) {
+      alert('Lavoro aggiornato con successo!');
+      isEditingJob = false;
+      currentEditJobId = null;
+      clearWizardState();
+      document.getElementById('personnel-list').innerHTML = '';
+      document.getElementById('materials-list').innerHTML = '';
+      loadJobs();
+    } else {
+      var errorResponse = await res.json();
+      console.error('Errore risposta server:', res.status, errorResponse);
+      alert('Errore nell\'aggiornamento del lavoro: ' + (errorResponse.error || res.statusText));
+    }
+  } catch (error) {
+    console.error('Errore:', error);
+    alert('Errore nell\'aggiornamento del lavoro: ' + error.message);
   }
 }
 
