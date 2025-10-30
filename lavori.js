@@ -216,15 +216,22 @@ function setupPersonnelSearch() {
   var searchInput = document.getElementById('personnel-search');
   var dropdown = document.getElementById('personnel-dropdown');
   
-  if (!searchInput || !dropdown) return;
+  if (!searchInput || !dropdown) {
+    console.error('Elementi personale-search non trovati');
+    return;
+  }
+  
+  console.log('setupPersonnelSearch: elementi trovati, allPersonnel.length =', allPersonnel.length);
   
   searchInput.addEventListener('focus', function() {
+    console.log('Focus su personnel-search, allPersonnel.length =', allPersonnel.length);
     renderPersonnelDropdown('');
     dropdown.classList.add('show');
   });
   
   searchInput.addEventListener('input', function() {
     var query = this.value.toLowerCase().trim();
+    console.log('Input su personnel-search:', query, 'allPersonnel.length =', allPersonnel.length);
     renderPersonnelDropdown(query);
     if (query || allPersonnel.length > 0) {
       dropdown.classList.add('show');
@@ -242,10 +249,14 @@ function renderPersonnelDropdown(query) {
   var dropdown = document.getElementById('personnel-dropdown');
   if (!dropdown) return;
   
+  console.log('renderPersonnelDropdown: query =', query, 'allPersonnel =', allPersonnel);
+  
   var filtered = allPersonnel.filter(p => 
     p.name.toLowerCase().includes(query) || 
     (p.role && p.role.toLowerCase().includes(query))
   );
+  
+  console.log('Filtered results:', filtered.length);
   
   if (filtered.length === 0) {
     dropdown.innerHTML = '<div style="padding: 1rem; text-align: center; color: #888;">Nessun personale trovato</div>';
