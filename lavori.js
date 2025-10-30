@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
   loadEquipment();
   loadJobs();
   setupFormListeners();
+  
+  // Se la tab attiva è "new-job", ripristina lo stato del wizard
+  var activeTab = localStorage.getItem('lavoriActiveTab');
+  if (activeTab === 'new-job') {
+    loadWizardState();
+  }
 });
 
 // ===== TAB NAVIGATION =====
