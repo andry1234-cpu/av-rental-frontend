@@ -345,6 +345,16 @@ main h4 {
   min-height: 60px;
 }
 
+/* DATETIME INPUT */
+.form-group input[type="datetime-local"] {
+  cursor: pointer;
+}
+
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+}
+
 /* MULTI-SELECT */
 .multi-select {
   display: flex;

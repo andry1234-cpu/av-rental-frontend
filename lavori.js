@@ -14,6 +14,7 @@ const EQUIPMENT_API = 'https://av-rental-backend.onrender.com/api/equipment';
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
   setupTabNavigation();
+  setupDatePickers();
   loadResponsibili();
   loadPersonnel();
   loadMaterials();
@@ -133,6 +134,17 @@ function updateWizardUI() {
     btnNext.style.display = 'none';
     btnSubmit.style.display = 'block';
   }
+}
+
+// ===== DATE PICKER ENHANCEMENT =====
+function setupDatePickers() {
+  // Apri il picker quando clicchi ovunque nel campo data
+  var dateInputs = document.querySelectorAll('input[type="datetime-local"]');
+  dateInputs.forEach(function(input) {
+    input.addEventListener('click', function() {
+      this.showPicker();
+    });
+  });
 }
 
 // ===== FORM LISTENERS =====
