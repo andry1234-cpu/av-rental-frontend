@@ -180,12 +180,7 @@
           <section class="data-section">
             <h4>Responsabili</h4>
             <div class="data-section-content">
-              <form id="responsibile-form" class="quick-form">
-                <input type="text" id="resp-name" placeholder="Nome Responsabile" required>
-                <input type="email" id="resp-email" placeholder="Email" required>
-                <input type="tel" id="resp-phone" placeholder="Telefono" required>
-                <button type="submit" class="btn-small">Aggiungi</button>
-              </form>
+              <button class="btn-small" onclick="openResponsibileModal()">+ Aggiungi Responsabile</button>
               <div id="responsibili-list" class="data-list"></div>
             </div>
           </section>
@@ -208,6 +203,40 @@
       </div>
     </div>
   </main>
+
+  <!-- MODAL: AGGIUNGI RESPONSABILE -->
+  <div id="responsibile-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Aggiungi Responsabile</h2>
+        <button class="modal-close-btn" onclick="closeResponsibileModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="responsibile-modal-form">
+          <div class="form-group">
+            <label>Nome *</label>
+            <input type="text" id="responsibile-modal-nome" placeholder="Nome" required>
+          </div>
+          <div class="form-group">
+            <label>Cognome *</label>
+            <input type="text" id="responsibile-modal-cognome" placeholder="Cognome" required>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="responsibile-modal-email" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <label>Telefono *</label>
+            <input type="tel" id="responsibile-modal-phone" placeholder="Telefono" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeResponsibileModal()">Annulla</button>
+        <button class="btn-primary" onclick="submitResponsibileModal()">Salva</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>&copy; 2025 WideTech</p>

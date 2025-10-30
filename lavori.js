@@ -619,6 +619,33 @@ async function createResponsibile(e) {
   }
 }
 
+async function createResponsibileFromModal(nome, cognome, email, phone) {
+  var respData = {
+    name: nome + ' ' + cognome,
+    email: email,
+    phone: phone
+  };
+  
+  try {
+    var res = await fetch(API_BASE + '/responsibili/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(respData)
+    });
+    
+    if (res.ok) {
+      alert('Responsabile aggiunto!');
+      closeResponsibileModal();
+      loadResponsibili();
+    } else {
+      alert('Responsabile già esiste');
+    }
+  } catch (error) {
+    console.error('Errore:', error);
+    alert('Errore nell\'aggiunta del responsabile');
+  }
+}
+
 async function createPersonnel(e) {
   e.preventDefault();
   
@@ -731,7 +758,26 @@ function displayJobs() {
 
 // ===== MODALS (placeholder) =====
 function openResponsibileModal() {
-  alert('Usa la scheda "Gestisci Dati" per aggiungere responsabili');
+  document.getElementById('responsibile-modal-form').reset();
+  document.getElementById('responsibile-modal').classList.remove('hidden');
+}
+
+function closeResponsibileModal() {
+  document.getElementById('responsibile-modal').classList.add('hidden');
+}
+
+function submitResponsibileModal() {
+  var nome = document.getElementById('responsibile-modal-nome').value.trim();
+  var cognome = document.getElementById('responsibile-modal-cognome').value.trim();
+  var email = document.getElementById('responsibile-modal-email').value.trim();
+  var phone = document.getElementById('responsibile-modal-phone').value.trim();
+  
+  if (!nome || !cognome || !email || !phone) {
+    alert('Compila tutti i campi');
+    return;
+  }
+  
+  createResponsibileFromModal(nome, cognome, email, phone);
 }
 
 function openPersonnelModal() {
