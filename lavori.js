@@ -167,10 +167,10 @@ async function editJob(jobId) {
     });
   }
   
-  // Aggiorna la UI della lista equipment (Step 3)
-  var equipListEl = document.getElementById('equipment-list');
-  if (equipListEl) {
-    equipListEl.innerHTML = '';
+  // Aggiorna la UI della lista materials (Step 3)
+  var matsListEl = document.getElementById('materials-list');
+  if (matsListEl) {
+    matsListEl.innerHTML = '';
     if (selectedEquipment.length > 0) {
       selectedEquipment.forEach((sel, idx) => {
         var eq = allEquipment.find(e => e._id === sel.equipmentId);
@@ -179,14 +179,14 @@ async function editJob(jobId) {
           item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: #f5f5f5; border-radius: 4px; margin-bottom: 0.5rem;';
           item.innerHTML = '<span>' + eq.name + ' (x' + sel.quantity + ')</span>' +
             '<button type="button" class="btn-small" onclick="removeEquipment(' + idx + ')">Rimuovi</button>';
-          equipListEl.appendChild(item);
+          matsListEl.appendChild(item);
         }
       });
     }
   }
 
-  // Set wizard to step 2 (Team)
-  currentStep = 2;
+  // Set wizard to step 1 (Details)
+  currentStep = 1;
   saveWizardState();
   updateWizardUI();
 
