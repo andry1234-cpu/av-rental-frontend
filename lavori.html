@@ -99,7 +99,14 @@
               <div class="form-group">
                 <label>Personale</label>
                 <div id="personnel-list" class="multi-select"></div>
-                <button type="button" class="btn-small" onclick="openPersonnelModal()">+ Aggiungi Personale</button>
+                
+                <!-- PERSONNEL DROPDOWN SEARCH -->
+                <div class="personnel-search-container">
+                  <input type="text" id="personnel-search" placeholder="Cerca personale..." class="personnel-search-input">
+                  <div id="personnel-dropdown" class="personnel-dropdown">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>

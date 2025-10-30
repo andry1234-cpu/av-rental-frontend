@@ -147,11 +147,91 @@ function setupDatePickers() {
   });
 }
 
+// ===== PERSONNEL SEARCH DROPDOWN =====
+function setupPersonnelSearch() {
+  var searchInput = document.getElementById('personnel-search');
+  var dropdown = document.getElementById('personnel-dropdown');
+  
+  if (!searchInput || !dropdown) return;
+  
+  searchInput.addEventListener('focus', function() {
+    renderPersonnelDropdown('');
+    dropdown.classList.add('show');
+  });
+  
+  searchInput.addEventListener('input', function() {
+    var query = this.value.toLowerCase().trim();
+    renderPersonnelDropdown(query);
+    if (query || allPersonnel.length > 0) {
+      dropdown.classList.add('show');
+    }
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.personnel-search-container')) {
+      dropdown.classList.remove('show');
+    }
+  });
+}
+
+function renderPersonnelDropdown(query) {
+  var dropdown = document.getElementById('personnel-dropdown');
+  if (!dropdown) return;
+  
+  var filtered = allPersonnel.filter(p => 
+    p.name.toLowerCase().includes(query) || 
+    (p.role && p.role.toLowerCase().includes(query))
+  );
+  
+  if (filtered.length === 0) {
+    dropdown.innerHTML = '<div style="padding: 1rem; text-align: center; color: #888;">Nessun personale trovato</div>';
+    return;
+  }
+  
+  dropdown.innerHTML = filtered.map(p => 
+    '<div class="personnel-item" onclick="addPersonnelToJob(\'' + p._id + '\', \'' + p.name.replace(/'/g, "\\'") + '\')">' +
+      '<div class="personnel-item-name">' + p.name + '</div>' +
+      '<div class="personnel-item-role">' + (p.role || 'N/A') + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function addPersonnelToJob(id, name) {
+  // Controlla se già aggiunto
+  if (selectedPersonnel.find(p => p === id)) {
+    alert('Personale già aggiunto');
+    return;
+  }
+  
+  selectedPersonnel.push(id);
+  displaySelectedPersonnel();
+  
+  // Chiudi dropdown e pulisci search
+  document.getElementById('personnel-search').value = '';
+  document.getElementById('personnel-dropdown').classList.remove('show');
+}
+
+function displaySelectedPersonnel() {
+  var container = document.getElementById('personnel-list');
+  container.innerHTML = selectedPersonnel.map(personId => {
+    var person = allPersonnel.find(p => p._id === personId);
+    return '<div class="multi-item">' + (person ? person.name : 'Sconosciuto') + 
+           ' <button type="button" class="remove-btn" onclick="removePersonnelFromJob(\'' + personId + '\')">×</button></div>';
+  }).join('');
+}
+
+function removePersonnelFromJob(id) {
+  selectedPersonnel = selectedPersonnel.filter(p => p !== id);
+  displaySelectedPersonnel();
+}
+
 // ===== FORM LISTENERS =====
 function setupFormListeners() {
   document.getElementById('new-job-form').addEventListener('submit', createJob);
   document.getElementById('responsibile-form').addEventListener('submit', createResponsibile);
   document.getElementById('personnel-form').addEventListener('submit', createPersonnel);
+  
+  setupPersonnelSearch();
   
   // Archive filters - auto-apply on change
   var filterSearch = document.getElementById('filter-search');
