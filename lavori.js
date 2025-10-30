@@ -1054,8 +1054,10 @@ function submitResponsibileModal() {
 var currentJobId = null;
 
 function showJobDetails(jobId) {
+  console.log('=== showJobDetails called with jobId =', jobId);
   currentJobId = jobId;
   var job = allJobs.find(j => j._id === jobId);
+  console.log('=== found job =', job);
   if (!job) {
     alert('Lavoro non trovato');
     return;
@@ -1080,9 +1082,10 @@ function showJobDetails(jobId) {
   }
 
   // Materiali/Equipment (gestisce differenti shape)
+  console.log('=== Before equipment check: job.equipment =', job.equipment);
   var equipmentNames = 'Nessuno';
   if (job.equipment && Array.isArray(job.equipment) && job.equipment.length > 0) {
-    console.log('DEBUG showJobDetails: job.equipment =', job.equipment);
+    console.log('DEBUG showJobDetails: ENTERING equipment mapping, job.equipment =', job.equipment);
     equipmentNames = job.equipment.map(eq => {
       console.log('DEBUG: processing eq =', eq, ', typeof =', typeof eq);
       
@@ -1091,9 +1094,10 @@ function showJobDetails(jobId) {
       
       // eq può essere:
       // 1. Un oggetto completo con _id e name (come viene salvato dal backend)
-      // 2. { equipmentId, quantity }
-      // 3. { _id, quantity }
-      // 4. Solo un ID string
+      // 2. { equipmentId: {...}, quantity }  ← equipmentId è un oggetto completo
+      // 3. { equipmentId: "ID_string", quantity }
+      // 4. { _id, quantity }
+      // 5. Solo un ID string
       
       if (typeof eq === 'string') {
         // È solo un ID
@@ -1102,19 +1106,35 @@ function showJobDetails(jobId) {
         console.log('DEBUG: eq is string, found item =', item);
       } else if (typeof eq === 'object' && eq) {
         // È un oggetto
-        console.log('DEBUG: eq is object, has name?', eq.name, ', has _id?', eq._id);
+        console.log('DEBUG: eq is object, has name?', eq.name, ', has equipmentId?', typeof eq.equipmentId);
+        
         if (eq.name && eq._id) {
           // È l'oggetto completo dell'equipment
           console.log('DEBUG: eq is complete equipment object');
           item = eq;
           qty = eq.quantity || 1;
-        } else {
-          // È un reference con equipmentId/quantità
-          var id = eq.equipmentId || eq._id || eq.id;
+        } else if (eq.equipmentId) {
+          // È un reference con equipmentId (che può essere stringa o oggetto)
           qty = eq.quantity || eq.qty || 1;
-          console.log('DEBUG: eq is reference with id =', id);
+          console.log('DEBUG: eq.equipmentId type =', typeof eq.equipmentId);
+          
+          if (typeof eq.equipmentId === 'object' && eq.equipmentId.name) {
+            // equipmentId è già l'oggetto completo
+            console.log('DEBUG: equipmentId è oggetto completo con name');
+            item = eq.equipmentId;
+          } else if (typeof eq.equipmentId === 'string') {
+            // equipmentId è una stringa ID, cercalo in allEquipment
+            console.log('DEBUG: equipmentId è string, searching in allEquipment');
+            item = allEquipment.find(e => e._id === eq.equipmentId);
+          } else {
+            console.log('DEBUG: equipmentId è tipo', typeof eq.equipmentId, '=', eq.equipmentId);
+          }
+        } else {
+          // Fallback: prova con _id direttamente
+          var id = eq._id || eq.id;
+          qty = eq.quantity || eq.qty || 1;
+          console.log('DEBUG: trying _id or id =', id);
           item = allEquipment.find(e => e._id === id);
-          console.log('DEBUG: found item in allEquipment =', item);
         }
       }
       
