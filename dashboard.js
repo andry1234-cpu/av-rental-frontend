@@ -99,23 +99,26 @@ function displayDashboardStats() {
     return;
   }
 
-  // Totale quantità in magazzino (quantity - brokenQuantity)
-  document.getElementById('total-items').textContent = dashboardStats.totalItems || 0;
+  // Helper per impostare il valore di un elemento se esiste
+  var setStat = (id, value) => {
+    var el = document.getElementById(id);
+    if (el) el.textContent = value || 0;
+  };
 
-  // Categorie uniche (non usato, potremmo aggiungere)
-  // document.getElementById('total-categories').textContent = dashboardStats.totalCategories || 0;
+  // Totale quantità in magazzino (quantity - brokenQuantity)
+  setStat('total-items', dashboardStats.totalItems || 0);
 
   // In magazzino (quantità disponibile NON assegnate a lavori attivi)
-  document.getElementById('in-stock').textContent = dashboardStats.inStock || 0;
+  setStat('in-stock', dashboardStats.inStock || 0);
 
   // In utilizzo (quantità assegnata a lavori attivi)
-  document.getElementById('in-use').textContent = dashboardStats.inUse || 0;
+  setStat('in-use', dashboardStats.inUse || 0);
 
   // Guasti (quantità rotta)
-  document.getElementById('broken').textContent = dashboardStats.broken || 0;
+  setStat('broken', dashboardStats.broken || 0);
 
   // Lavori attivi
-  document.getElementById('active-jobs').textContent = dashboardStats.activeJobs || 0;
+  setStat('active-jobs', dashboardStats.activeJobs || 0);
 }
 
 function displayTodayActiveJobs() {
