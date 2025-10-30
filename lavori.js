@@ -27,10 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
   if (activeTab === 'new-job') {
     loadWizardState();
   }
+});
 
-// ===== EDIT JOB (apre il wizard con i dati del lavoro) =====
+// ===== EDIT JOB (apre il wizard con i dati del lavoro) - GLOBAL =====
 async function editJob(jobId) {
-  var job = allJobs.find(j => j._id === jobId);
+  console.log('editJob called for', jobId);
+
+  // Try to find the job in-memory; if not found, fetch from API
+  var job = allJobs.find(j => (j._id === jobId || j.id === jobId));
+  if (!job) {
+    try {
+      var res = await fetch(API_BASE + '/' + jobId);
+      if (res.ok) {
+        job = await res.json();
+      }
+    } catch (e) {
+      console.warn('Impossibile recuperare il lavoro dal server:', e);
+    }
+  }
+
   if (!job) {
     alert('Lavoro non trovato');
     return;
@@ -55,19 +70,51 @@ async function editJob(jobId) {
   localStorage.setItem('lavoriActiveTab', 'new-job');
 
   // Popola i campi del wizard
-  document.getElementById('job-name').value = job.name || '';
-  document.getElementById('job-start-date').value = job.startDate || '';
-  document.getElementById('job-end-date').value = job.endDate || '';
-  document.getElementById('job-location').value = job.location || '';
+  var setIfExists = (id, value) => {
+    var el = document.getElementById(id);
+    if (el) el.value = value || '';
+  };
+  setIfExists('job-name', job.name || '');
+  setIfExists('job-start-date', job.startDate || '');
+  setIfExists('job-end-date', job.endDate || '');
+  setIfExists('job-location', job.location || '');
 
-  // Responsabile (può essere object o id)
-  var respVal = '';
-  if (job.responsibile) {
-    if (typeof job.responsibile === 'string') respVal = job.responsibile;
-    else if (typeof job.responsibile === 'object') respVal = job.responsibile._id || job.responsibile.id || job.responsibile;
-  }
+  // Responsabile (può essere object, id o nome)
   var respSelect = document.getElementById('job-responsibile');
-  if (respSelect) respSelect.value = respVal;
+  if (respSelect) {
+    var respVal = '';
+    if (job.responsibile) {
+      if (typeof job.responsibile === 'string') {
+        respVal = job.responsibile;
+      } else if (typeof job.responsibile === 'object') {
+        respVal = job.responsibile._id || job.responsibile.id || job.responsibile;
+      }
+
+      // If respVal is still empty, try matching by name
+      if (!respVal && typeof job.responsibile === 'string') {
+        var match = allResponsibili.find(r => r.name === job.responsibile || (r.name + ' ' + (r.surname || '')).trim() === job.responsibile);
+        if (match) respVal = match._id;
+      }
+
+      // If still not found but job.responsibile has name field, try that
+      if (!respVal && job.responsibile.name) {
+        var match2 = allResponsibili.find(r => r.name === job.responsibile.name);
+        if (match2) respVal = match2._id;
+      }
+
+      // Set value if option exists, otherwise add an option
+      if (respVal) {
+        var opt = respSelect.querySelector('option[value="' + respVal + '"]');
+        if (!opt) {
+          var newOpt = document.createElement('option');
+          newOpt.value = respVal;
+          newOpt.textContent = (job.responsibile.name || job.responsibile) || respVal;
+          respSelect.appendChild(newOpt);
+        }
+        respSelect.value = respVal;
+      }
+    }
+  }
 
   // Personale
   selectedPersonnel = [];
@@ -79,11 +126,12 @@ async function editJob(jobId) {
   }
   displaySelectedPersonnel();
 
-  // Per semplicità non ripristiniamo l'equipment complesso qui, solo materiali vuoti
+  // Clear materials list UI and selectedMaterials (we'll restore if needed later)
   selectedMaterials = [];
-  document.getElementById('materials-list').innerHTML = '';
+  var matsEl = document.getElementById('materials-list');
+  if (matsEl) matsEl.innerHTML = '';
 
-  // Imposta step iniziale (1) o passo Team (2)
+  // Set wizard to step 2 (Team)
   currentStep = 2;
   saveWizardState();
   updateWizardUI();
@@ -91,7 +139,6 @@ async function editJob(jobId) {
   // Chiudi modal dettagli
   closeJobDetailsModal();
 }
-});
 
 // ===== TAB NAVIGATION =====
 function setupTabNavigation() {
