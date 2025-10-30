@@ -7,6 +7,8 @@ let allJobs = [];
 let selectedPersonnel = [];
 let selectedMaterials = [];
 let selectedEquipment = [];
+let isEditingJob = false; // Traccia se siamo in modalità edit
+let currentEditJobId = null; // ID del lavoro in corso di modifica
 
 const API_BASE = 'https://av-rental-backend.onrender.com/api/jobs';
 const EQUIPMENT_API = 'https://av-rental-backend.onrender.com/api/equipment';
@@ -22,9 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
   loadJobs();
   setupFormListeners();
   
-  // Se la tab attiva è "new-job", ripristina lo stato del wizard
+  // Solo se siamo in modalità edit, ripristina lo stato del wizard
+  // Se siamo in modalità "new", non carichedare lo stato salvato
   var activeTab = localStorage.getItem('lavoriActiveTab');
-  if (activeTab === 'new-job') {
+  var wizardEditMode = localStorage.getItem('wizardEditMode');
+  if (activeTab === 'new-job' && wizardEditMode === 'true') {
     loadWizardState();
   }
 });
@@ -32,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== EDIT JOB (apre il wizard con i dati del lavoro) - GLOBAL =====
 async function editJob(jobId) {
   console.log('editJob called for', jobId);
+  
+  // Imposta la modalità edit
+  isEditingJob = true;
+  currentEditJobId = jobId;
+  localStorage.setItem('wizardEditMode', 'true');
 
   // Try to find the job in-memory; if not found, fetch from API
   var job = allJobs.find(j => (j._id === jobId || j.id === jobId));
@@ -176,6 +185,14 @@ function setupTabNavigation() {
     btn.addEventListener('click', function() {
       var tabName = btn.getAttribute('data-tab');
       
+      // Se clicchiamo su "new-job" e NON siamo in modalità edit, reset il form
+      if (tabName === 'new-job' && !isEditingJob) {
+        clearWizardState();
+        isEditingJob = false;
+        currentEditJobId = null;
+        localStorage.setItem('wizardEditMode', 'false');
+      }
+      
       // Salva la tab nel localStorage
       localStorage.setItem('lavoriActiveTab', tabName);
       
@@ -241,9 +258,15 @@ function loadWizardState() {
 // Pulisci lo stato quando il form viene inviato
 function clearWizardState() {
   localStorage.removeItem('wizardState');
+  localStorage.removeItem('wizardEditMode');
   selectedPersonnel = [];
+  selectedMaterials = [];
+  selectedEquipment = [];
   document.getElementById('new-job-form').reset();
+  isEditingJob = false;
+  currentEditJobId = null;
   currentStep = 1;
+  updateWizardUI();
 }
 
 function nextStep() {
