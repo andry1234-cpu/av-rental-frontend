@@ -63,7 +63,6 @@ function setupFormListeners() {
   document.getElementById('new-job-form').addEventListener('submit', createJob);
   document.getElementById('responsibile-form').addEventListener('submit', createResponsibile);
   document.getElementById('personnel-form').addEventListener('submit', createPersonnel);
-  document.getElementById('material-form').addEventListener('submit', createMaterial);
   
   // Archive filters - auto-apply on change
   var filterSearch = document.getElementById('filter-search');
@@ -408,33 +407,6 @@ async function createPersonnel(e) {
   }
 }
 
-async function createMaterial(e) {
-  e.preventDefault();
-  
-  var matData = {
-    name: document.getElementById('mat-name').value,
-    category: document.getElementById('mat-category').value,
-    description: document.getElementById('mat-description').value
-  };
-  
-  try {
-    var res = await fetch(API_BASE + '/materials/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(matData)
-    });
-    
-    if (res.ok) {
-      alert('Materiale aggiunto!');
-      document.getElementById('material-form').reset();
-      loadMaterials();
-    } else {
-      alert('Materiale già esiste');
-    }
-  } catch (error) {
-    console.error('Errore:', error);
-  }
-}
 
 // ===== DISPLAY FUNCTIONS =====
 function displayResponsibili() {
