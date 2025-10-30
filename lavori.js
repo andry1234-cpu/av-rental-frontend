@@ -69,14 +69,26 @@ async function editJob(jobId) {
   if (newContent) newContent.classList.add('active');
   localStorage.setItem('lavoriActiveTab', 'new-job');
 
+  // Helper to convert ISO date (2025-10-31T18:23:00.000Z) to datetime-local format (2025-10-31T18:23)
+  var convertToDatetimeLocal = (isoDate) => {
+    if (!isoDate) return '';
+    try {
+      // Remove Z and milliseconds if present, keep only yyyy-MM-ddThh:mm:ss
+      var dateStr = isoDate.split('.')[0]; // Remove milliseconds
+      return dateStr; // Should be in format 2025-10-31T18:23:00
+    } catch (e) {
+      return isoDate;
+    }
+  };
+
   // Popola i campi del wizard
   var setIfExists = (id, value) => {
     var el = document.getElementById(id);
     if (el) el.value = value || '';
   };
   setIfExists('job-name', job.name || '');
-  setIfExists('job-start-date', job.startDate || '');
-  setIfExists('job-end-date', job.endDate || '');
+  setIfExists('job-start-date', convertToDatetimeLocal(job.startDate || ''));
+  setIfExists('job-end-date', convertToDatetimeLocal(job.endDate || ''));
   setIfExists('job-location', job.location || '');
 
   // Responsabile (può essere object, id o nome)
