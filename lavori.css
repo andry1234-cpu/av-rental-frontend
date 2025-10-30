@@ -513,6 +513,22 @@ main h4 {
   background: #444;
 }
 
+.btn-danger {
+  background: #d32f2f;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background: #f44336;
+}
+
 .btn-small {
   padding: 0.5rem 0.9rem;
   font-size: 0.75rem;

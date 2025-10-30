@@ -238,6 +238,25 @@
     </div>
   </div>
 
+  <!-- MODAL: DETTAGLI LAVORO -->
+  <div id="job-details-modal" class="modal hidden">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="job-details-title">Dettagli Lavoro</h2>
+        <button class="modal-close-btn" onclick="closeJobDetailsModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="job-details-content">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-danger" onclick="deleteJobFromModal()">Elimina</button>
+        <button class="btn-secondary" onclick="closeJobDetailsModal()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2025 WideTech</p>
   </footer>

@@ -472,12 +472,21 @@ function displayArchivedJobs(jobs) {
     
     var jobCard = document.createElement('div');
     jobCard.className = 'job-archive-card';
-    jobCard.style.cssText = 'padding: 1rem; background: rgba(0,188,212,0.08); border-left: 3px solid #00BCD4; margin-bottom: 0.8rem; border-radius: 5px;';
+    jobCard.style.cssText = 'padding: 1rem; background: rgba(0,188,212,0.08); border-left: 3px solid #00BCD4; margin-bottom: 0.8rem; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;';
     
-    jobCard.innerHTML = '<h4 style="margin: 0 0 0.5rem 0; color: #f0f0f0; font-family: Poppins, sans-serif;">' + job.name + '</h4>' +
+    var jobInfo = document.createElement('div');
+    jobInfo.innerHTML = '<h4 style="margin: 0 0 0.5rem 0; color: #f0f0f0; font-family: Poppins, sans-serif;">' + job.name + '</h4>' +
       '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Data:</strong> ' + startDate + ' - ' + endDate + '</p>' +
       '<p style="margin: 0.3rem 0; font-size: 0.85rem; color: #aaa;"><strong>Responsabile:</strong> ' + responsibleName + '</p>';
     
+    var viewBtn = document.createElement('button');
+    viewBtn.className = 'btn-primary';
+    viewBtn.textContent = 'Visualizza';
+    viewBtn.style.cssText = 'padding: 0.6rem 1.2rem; white-space: nowrap; margin-left: 1rem;';
+    viewBtn.onclick = function() { showJobDetails(job._id); };
+    
+    jobCard.appendChild(jobInfo);
+    jobCard.appendChild(viewBtn);
     archiveList.appendChild(jobCard);
   });
 }
@@ -789,6 +798,83 @@ function submitResponsibileModal() {
   }
   
   createResponsibileFromModal(nome, cognome, email, phone);
+}
+
+// ===== JOB DETAILS MODAL =====
+var currentJobId = null;
+
+function showJobDetails(jobId) {
+  currentJobId = jobId;
+  var job = allJobs.find(j => j._id === jobId);
+  if (!job) {
+    alert('Lavoro non trovato');
+    return;
+  }
+  
+  var startDate = new Date(job.startDate).toLocaleDateString('it-IT');
+  var endDate = new Date(job.endDate).toLocaleDateString('it-IT');
+  var responsibleName = job.responsibile ? (job.responsibile.name || 'N/A') : 'N/A';
+  
+  // Nomi personale
+  var personnelNames = job.personnel ? job.personnel.map(pId => {
+    var person = allPersonnel.find(p => p._id === pId);
+    return person ? person.name : 'N/A';
+  }).join(', ') : 'Nessuno';
+  
+  // Materiali/Equipment
+  var equipmentNames = job.equipment ? job.equipment.map(eq => {
+    var item = allEquipment.find(e => e._id === eq.equipmentId);
+    return item ? (item.name + ' (x' + eq.quantity + ')') : 'N/A';
+  }).join(', ') : 'Nessuno';
+  
+  var content = '<div style="display: flex; flex-direction: column; gap: 1rem;">' +
+    '<div><strong>Nome:</strong> ' + job.name + '</div>' +
+    '<div><strong>Data Inizio:</strong> ' + startDate + '</div>' +
+    '<div><strong>Data Fine:</strong> ' + endDate + '</div>' +
+    '<div><strong>Luogo:</strong> ' + job.location + '</div>' +
+    '<div><strong>Responsabile:</strong> ' + responsibleName + '</div>' +
+    '<div><strong>Personale:</strong> ' + personnelNames + '</div>' +
+    '<div><strong>Materiali:</strong> ' + equipmentNames + '</div>' +
+    '<div><strong>Note:</strong> ' + (job.notes || 'Nessuna') + '</div>' +
+    '</div>';
+  
+  document.getElementById('job-details-title').textContent = job.name;
+  document.getElementById('job-details-content').innerHTML = content;
+  document.getElementById('job-details-modal').classList.remove('hidden');
+}
+
+function closeJobDetailsModal() {
+  document.getElementById('job-details-modal').classList.add('hidden');
+  currentJobId = null;
+}
+
+function deleteJobFromModal() {
+  if (!currentJobId) return;
+  
+  if (!confirm('Sei sicuro di voler eliminare questo lavoro?')) {
+    return;
+  }
+  
+  deleteJob(currentJobId);
+}
+
+async function deleteJob(jobId) {
+  try {
+    var res = await fetch(API_BASE + '/' + jobId, {
+      method: 'DELETE'
+    });
+    
+    if (res.ok) {
+      alert('Lavoro eliminato con successo!');
+      closeJobDetailsModal();
+      loadJobs();
+    } else {
+      alert('Errore nell\'eliminazione del lavoro');
+    }
+  } catch (error) {
+    console.error('Errore:', error);
+    alert('Errore nell\'eliminazione del lavoro: ' + error.message);
+  }
 }
 
 function openPersonnelModal() {
