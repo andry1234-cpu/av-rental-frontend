@@ -147,10 +147,43 @@ async function editJob(jobId) {
   }
   displaySelectedPersonnel();
 
-  // Clear materials list UI and selectedMaterials (we'll restore if needed later)
-  selectedMaterials = [];
-  var matsEl = document.getElementById('materials-list');
-  if (matsEl) matsEl.innerHTML = '';
+  // Equipment/Materiali - restore from job
+  selectedEquipment = [];
+  if (job.equipment && Array.isArray(job.equipment)) {
+    job.equipment.forEach(eq => {
+      if (typeof eq === 'string') {
+        // È un ID
+        selectedEquipment.push({ equipmentId: eq, quantity: 1 });
+      } else if (eq && typeof eq === 'object') {
+        // È un oggetto con equipmentId e quantity
+        if (eq.equipmentId) {
+          var id = (typeof eq.equipmentId === 'string') ? eq.equipmentId : (eq.equipmentId._id || eq.equipmentId.id);
+          selectedEquipment.push({ equipmentId: id, quantity: eq.quantity || 1 });
+        } else if (eq._id) {
+          // Fallback: usa _id direttamente
+          selectedEquipment.push({ equipmentId: eq._id, quantity: eq.quantity || 1 });
+        }
+      }
+    });
+  }
+  
+  // Aggiorna la UI della lista equipment (Step 3)
+  var equipListEl = document.getElementById('equipment-list');
+  if (equipListEl) {
+    equipListEl.innerHTML = '';
+    if (selectedEquipment.length > 0) {
+      selectedEquipment.forEach((sel, idx) => {
+        var eq = allEquipment.find(e => e._id === sel.equipmentId);
+        if (eq) {
+          var item = document.createElement('div');
+          item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: #f5f5f5; border-radius: 4px; margin-bottom: 0.5rem;';
+          item.innerHTML = '<span>' + eq.name + ' (x' + sel.quantity + ')</span>' +
+            '<button type="button" class="btn-small" onclick="removeEquipment(' + idx + ')">Rimuovi</button>';
+          equipListEl.appendChild(item);
+        }
+      });
+    }
+  }
 
   // Set wizard to step 2 (Team)
   currentStep = 2;
