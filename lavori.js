@@ -106,6 +106,11 @@ function loadWizardState() {
         document.getElementById('job-responsibile').value = data.formData.jobResponsible || '';
         selectedPersonnel = data.formData.selectedPersonnel || [];
         displaySelectedPersonnel();
+        
+        // Mostra il campo di ricerca se c'è personale
+        if (selectedPersonnel.length > 0) {
+          document.getElementById('personnel-search-container').classList.remove('hidden');
+        }
       }
       
       updateWizardUI();
@@ -269,6 +274,9 @@ function addPersonnelToJob(id, name) {
   
   selectedPersonnel.push(id);
   displaySelectedPersonnel();
+  
+  // Mostra il campo di ricerca
+  document.getElementById('personnel-search-container').classList.remove('hidden');
   
   // Chiudi dropdown e pulisci search
   document.getElementById('personnel-search').value = '';
