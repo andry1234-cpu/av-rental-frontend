@@ -381,8 +381,8 @@ main h4 {
 
 .personnel-search-input {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #333;
+  padding: 0.7rem 0.8rem;
+  border: 2px solid #333;
   border-radius: 5px;
   background: #1f1f1f;
   color: #f0f0f0;
