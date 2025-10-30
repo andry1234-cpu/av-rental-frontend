@@ -349,15 +349,15 @@ function updateWizardUI() {
   var btnSubmit = document.getElementById('btn-submit');
   
   if (currentStep === 1) {
-    btnPrev.style.display = 'none';
+    btnPrev.disabled = true;
     btnNext.style.display = 'block';
     btnSubmit.style.display = 'none';
   } else if (currentStep === 2) {
-    btnPrev.style.display = 'block';
+    btnPrev.disabled = false;
     btnNext.style.display = 'block';
     btnSubmit.style.display = 'none';
   } else if (currentStep === 3) {
-    btnPrev.style.display = 'block';
+    btnPrev.disabled = false;
     btnNext.style.display = 'none';
     btnSubmit.style.display = 'block';
   }

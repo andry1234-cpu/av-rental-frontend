@@ -513,6 +513,17 @@ main h4 {
   background: #444;
 }
 
+.btn-secondary:disabled {
+  background: #888;
+  color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-secondary:disabled:hover {
+  background: #888;
+}
+
 .btn-danger {
   background: #d32f2f;
   color: #fff;
