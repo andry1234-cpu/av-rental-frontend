@@ -82,6 +82,8 @@ async function loadTodayActiveJobs(retryCount) {
     console.log('Lavori attivi oggi:', data);
     todayActiveJobs = data.jobs || [];
     displayTodayActiveJobs();
+    updateActiveJobsCount(); // Aggiorna il conteggio nel card
+
     
   } catch (error) {
     console.error('Errore nel caricamento lavori attivi:', error);
@@ -132,10 +134,29 @@ function displayTodayActiveJobs() {
     return;
   }
   
+  // Filtra i lavori per verificare che oggi sia effettivamente compreso tra startDate e endDate
+  var today = new Date();
+  today.setHours(0, 0, 0, 0); // Midnight
+  
+  var activeJobsFiltered = todayActiveJobs.filter(function(job) {
+    var startDate = new Date(job.startDate);
+    var endDate = new Date(job.endDate);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    
+    // Verifica che oggi sia compreso nel range
+    return today >= startDate && today <= endDate;
+  });
+  
+  if (activeJobsFiltered.length === 0) {
+    categoryStats.innerHTML = '<div style="text-align: center; padding: 1rem; color: #888;">Nessun lavoro attivo oggi</div>';
+    return;
+  }
+  
   // Aggiungi ogni lavoro come riga
   var i;
-  for (i = 0; i < todayActiveJobs.length; i++) {
-    var job = todayActiveJobs[i];
+  for (i = 0; i < activeJobsFiltered.length; i++) {
+    var job = activeJobsFiltered[i];
     var item = document.createElement('div');
     item.className = 'active-job-item';
     
@@ -149,6 +170,29 @@ function displayTodayActiveJobs() {
     item.innerHTML = '<div class="job-name">' + job.name + '</div><div class="job-info"><span class="job-date">' + dateRange + '</span> | <span class="job-resp">' + responsibileName + '</span></div>';
     categoryStats.appendChild(item);
   }
+}
+
+// Funzione per contare e aggiornare il numero di lavori attivi veramente oggi
+function updateActiveJobsCount() {
+  if (!Array.isArray(todayActiveJobs) || todayActiveJobs.length === 0) {
+    setStat('active-jobs', 0);
+    return;
+  }
+  
+  // Filtra i lavori per verificare che oggi sia effettivamente compreso tra startDate e endDate
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  var activeJobsFiltered = todayActiveJobs.filter(function(job) {
+    var startDate = new Date(job.startDate);
+    var endDate = new Date(job.endDate);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    
+    return today >= startDate && today <= endDate;
+  });
+  
+  setStat('active-jobs', activeJobsFiltered.length);
 }
 
 function formatDate(date) {
