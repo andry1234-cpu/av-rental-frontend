@@ -106,11 +106,6 @@ function loadWizardState() {
         document.getElementById('job-responsibile').value = data.formData.jobResponsible || '';
         selectedPersonnel = data.formData.selectedPersonnel || [];
         displaySelectedPersonnel();
-        
-        // Mostra il campo di ricerca se c'è personale
-        if (selectedPersonnel.length > 0) {
-          document.getElementById('personnel-search-container').classList.remove('hidden');
-        }
       }
       
       updateWizardUI();
@@ -275,26 +270,34 @@ function addPersonnelToJob(id, name) {
   selectedPersonnel.push(id);
   displaySelectedPersonnel();
   
-  // Mostra il campo di ricerca
-  document.getElementById('personnel-search-container').classList.remove('hidden');
-  
   // Chiudi dropdown e pulisci search
   document.getElementById('personnel-search').value = '';
   document.getElementById('personnel-dropdown').classList.remove('show');
+  saveWizardState();
 }
 
 function displaySelectedPersonnel() {
   var container = document.getElementById('personnel-list');
-  container.innerHTML = selectedPersonnel.map(personId => {
-    var person = allPersonnel.find(p => p._id === personId);
-    return '<div class="multi-item">' + (person ? person.name : 'Sconosciuto') + 
-           ' <button type="button" class="remove-btn" onclick="removePersonnelFromJob(\'' + personId + '\')">×</button></div>';
-  }).join('');
+  
+  if (selectedPersonnel.length === 0) {
+    // Nascondi il container quando non ci sono persone
+    container.classList.add('hidden');
+    container.innerHTML = '';
+  } else {
+    // Mostra il container quando ci sono persone
+    container.classList.remove('hidden');
+    container.innerHTML = selectedPersonnel.map(personId => {
+      var person = allPersonnel.find(p => p._id === personId);
+      return '<div class="multi-item">' + (person ? person.name : 'Sconosciuto') + 
+             ' <button type="button" class="remove-btn" onclick="removePersonnelFromJob(\'' + personId + '\')">×</button></div>';
+    }).join('');
+  }
 }
 
 function removePersonnelFromJob(id) {
   selectedPersonnel = selectedPersonnel.filter(p => p !== id);
   displaySelectedPersonnel();
+  saveWizardState();
 }
 
 // ===== FORM LISTENERS =====
