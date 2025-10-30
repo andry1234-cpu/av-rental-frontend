@@ -179,9 +179,13 @@ function updateActiveJobsCount() {
     return;
   }
   
+  console.log('=== DEBUG updateActiveJobsCount ===');
+  console.log('todayActiveJobs length:', todayActiveJobs.length);
+  
   // Filtra i lavori per verificare che oggi sia effettivamente compreso tra startDate e endDate
   var today = new Date();
   today.setHours(0, 0, 0, 0);
+  console.log('Today (midnight):', today);
   
   var activeJobsFiltered = todayActiveJobs.filter(function(job) {
     var startDate = new Date(job.startDate);
@@ -189,8 +193,14 @@ function updateActiveJobsCount() {
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
     
-    return today >= startDate && today <= endDate;
+    var isActive = today >= startDate && today <= endDate;
+    console.log('Job:', job.name, '| Start:', startDate, '| End:', endDate, '| Active:', isActive);
+    
+    return isActive;
   });
+  
+  console.log('Filtered count:', activeJobsFiltered.length);
+  console.log('=== END DEBUG ===');
   
   setStat('active-jobs', activeJobsFiltered.length);
 }
