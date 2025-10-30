@@ -371,7 +371,6 @@ main h4 {
 .personnel-search-container {
   position: relative;
   margin-top: 0.5rem;
-  max-width: 200px;
 }
 
 .personnel-search-container.hidden {
