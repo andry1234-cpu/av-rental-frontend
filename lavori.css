@@ -367,6 +367,10 @@ main h4 {
   margin-bottom: 1rem;
 }
 
+.multi-select.hidden {
+  display: none;
+}
+
 /* PERSONNEL SEARCH DROPDOWN */
 .personnel-search-container {
   position: relative;
