@@ -91,6 +91,72 @@ main h4 {
   to { opacity: 1; }
 }
 
+/* WIZARD FORM */
+.wizard-indicator {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.wizard-step.active {
+  opacity: 1;
+}
+
+.wizard-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #1f1f1f;
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.wizard-step.active .wizard-circle {
+  background: #00BCD4;
+  border-color: #00BCD4;
+  color: #1f1f1f;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+}
+
+.wizard-label {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+.wizard-step.active .wizard-label {
+  color: #00BCD4;
+}
+
+.wizard-step-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.wizard-step-content.active {
+  display: block;
+}
+
 /* ARCHIVE FILTERS */
 .archive-filters {
   display: flex;

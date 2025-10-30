@@ -37,68 +37,96 @@
       <!-- TAB 1: NEW JOB -->
       <div id="new-job" class="tab-content active">
         <h3>Crea Nuovo Lavoro</h3>
+        
+        <!-- WIZARD INDICATOR -->
+        <div class="wizard-indicator">
+          <div class="wizard-step active" id="step-1-indicator">
+            <div class="wizard-circle">1</div>
+            <div class="wizard-label">Evento</div>
+          </div>
+          <div class="wizard-step" id="step-2-indicator">
+            <div class="wizard-circle">2</div>
+            <div class="wizard-label">Team</div>
+          </div>
+          <div class="wizard-step" id="step-3-indicator">
+            <div class="wizard-circle">3</div>
+            <div class="wizard-label">Dettagli</div>
+          </div>
+        </div>
+
         <form id="new-job-form" class="job-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Nome Evento *</label>
-              <input type="text" id="job-name" placeholder="Es: Conferenza AV 2025" required>
+          <!-- STEP 1: EVENTO -->
+          <div class="wizard-step-content active" id="step-1">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nome Evento *</label>
+                <input type="text" id="job-name" placeholder="Es: Conferenza AV 2025" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Data Inizio *</label>
+                <input type="datetime-local" id="job-start-date" required>
+              </div>
+              <div class="form-group">
+                <label>Data Fine *</label>
+                <input type="datetime-local" id="job-end-date" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Luogo *</label>
+                <input type="text" id="job-location" placeholder="Es: Sala Conferenze Milano" required>
+              </div>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Data Inizio *</label>
-              <input type="datetime-local" id="job-start-date" required>
+          <!-- STEP 2: TEAM -->
+          <div class="wizard-step-content" id="step-2">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Responsabile *</label>
+                <select id="job-responsibile" required>
+                  <option value="">-- Seleziona Responsabile --</option>
+                </select>
+                <button type="button" class="btn-small" onclick="openResponsibileModal()">+ Aggiungi</button>
+              </div>
             </div>
-            <div class="form-group">
-              <label>Data Fine *</label>
-              <input type="datetime-local" id="job-end-date" required>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Personale</label>
+                <div id="personnel-list" class="multi-select"></div>
+                <button type="button" class="btn-small" onclick="openPersonnelModal()">+ Aggiungi Personale</button>
+              </div>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Luogo *</label>
-              <input type="text" id="job-location" placeholder="Es: Sala Conferenze Milano" required>
+          <!-- STEP 3: DETTAGLI -->
+          <div class="wizard-step-content" id="step-3">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Materiali</label>
+                <div id="materials-list" class="multi-select"></div>
+                <button type="button" class="btn-small" onclick="openMaterialModal()">+ Aggiungi Materiale</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Note</label>
+                <textarea id="job-notes" placeholder="Note aggiuntive..." rows="3"></textarea>
+              </div>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Responsabile *</label>
-              <select id="job-responsibile" required>
-                <option value="">-- Seleziona Responsabile --</option>
-              </select>
-              <button type="button" class="btn-small" onclick="openResponsibileModal()">+ Aggiungi</button>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Personale</label>
-              <div id="personnel-list" class="multi-select"></div>
-              <button type="button" class="btn-small" onclick="openPersonnelModal()">+ Aggiungi Personale</button>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Materiali</label>
-              <div id="materials-list" class="multi-select"></div>
-              <button type="button" class="btn-small" onclick="openMaterialModal()">+ Aggiungi Materiale</button>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Note</label>
-              <textarea id="job-notes" placeholder="Note aggiuntive..." rows="3"></textarea>
-            </div>
-          </div>
-
+          <!-- NAVIGATION BUTTONS -->
           <div class="form-actions">
-            <button type="submit" class="btn-primary">Crea Lavoro</button>
-            <button type="reset" class="btn-secondary">Pulisci</button>
+            <button type="button" class="btn-secondary" id="btn-prev" style="display: none;" onclick="previousStep()">← Indietro</button>
+            <button type="button" class="btn-primary" id="btn-next" onclick="nextStep()">Prosegui →</button>
+            <button type="submit" class="btn-primary" id="btn-submit" style="display: none;">Crea Lavoro</button>
           </div>
         </form>
       </div>

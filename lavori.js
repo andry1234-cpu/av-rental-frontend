@@ -58,6 +58,83 @@ function setupTabNavigation() {
   });
 }
 
+// ===== WIZARD FORM =====
+let currentStep = 1;
+
+function nextStep() {
+  if (validateStep(currentStep)) {
+    if (currentStep < 3) {
+      currentStep++;
+      updateWizardUI();
+    }
+  }
+}
+
+function previousStep() {
+  if (currentStep > 1) {
+    currentStep--;
+    updateWizardUI();
+  }
+}
+
+function validateStep(step) {
+  if (step === 1) {
+    var name = document.getElementById('job-name').value.trim();
+    var startDate = document.getElementById('job-start-date').value;
+    var endDate = document.getElementById('job-end-date').value;
+    var location = document.getElementById('job-location').value.trim();
+    
+    if (!name || !startDate || !endDate || !location) {
+      alert('Completa tutti i campi dello Step 1');
+      return false;
+    }
+    
+    if (new Date(startDate) >= new Date(endDate)) {
+      alert('La data fine deve essere dopo la data inizio');
+      return false;
+    }
+  }
+  
+  if (step === 2) {
+    var responsibile = document.getElementById('job-responsibile').value;
+    if (!responsibile) {
+      alert('Seleziona un Responsabile');
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+function updateWizardUI() {
+  // Nascondi tutti gli step
+  document.querySelectorAll('.wizard-step-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+  
+  // Mostra lo step corrente
+  document.getElementById('step-' + currentStep).classList.add('active');
+  document.getElementById('step-' + currentStep + '-indicator').classList.add('active');
+  
+  // Aggiorna pulsanti di navigazione
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+  var btnSubmit = document.getElementById('btn-submit');
+  
+  if (currentStep === 1) {
+    btnPrev.style.display = 'none';
+    btnNext.style.display = 'block';
+    btnSubmit.style.display = 'none';
+  } else if (currentStep === 2) {
+    btnPrev.style.display = 'block';
+    btnNext.style.display = 'block';
+    btnSubmit.style.display = 'none';
+  } else if (currentStep === 3) {
+    btnPrev.style.display = 'block';
+    btnNext.style.display = 'none';
+    btnSubmit.style.display = 'block';
+  }
+}
+
 // ===== FORM LISTENERS =====
 function setupFormListeners() {
   document.getElementById('new-job-form').addEventListener('submit', createJob);
