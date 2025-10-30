@@ -55,6 +55,11 @@ function setupTabNavigation() {
       
       btn.classList.add('active');
       document.getElementById(tabName).classList.add('active');
+      
+      // Se torna sulla tab "Nuovo Lavoro", ripristina lo stato del wizard
+      if (tabName === 'new-job') {
+        loadWizardState();
+      }
     });
   });
 }
@@ -62,10 +67,62 @@ function setupTabNavigation() {
 // ===== WIZARD FORM =====
 let currentStep = 1;
 
+// Salva lo stato del wizard in localStorage
+function saveWizardState() {
+  var wizardData = {
+    currentStep: currentStep,
+    formData: {
+      jobName: document.getElementById('job-name').value,
+      jobStartDate: document.getElementById('job-start-date').value,
+      jobEndDate: document.getElementById('job-end-date').value,
+      jobLocation: document.getElementById('job-location').value,
+      jobResponsible: document.getElementById('job-responsibile').value,
+      selectedPersonnel: selectedPersonnel
+    }
+  };
+  localStorage.setItem('wizardState', JSON.stringify(wizardData));
+}
+
+// Carica lo stato del wizard da localStorage
+function loadWizardState() {
+  var saved = localStorage.getItem('wizardState');
+  if (saved) {
+    try {
+      var data = JSON.parse(saved);
+      currentStep = data.currentStep || 1;
+      
+      // Ripristina i campi del form
+      if (data.formData) {
+        document.getElementById('job-name').value = data.formData.jobName || '';
+        document.getElementById('job-start-date').value = data.formData.jobStartDate || '';
+        document.getElementById('job-end-date').value = data.formData.jobEndDate || '';
+        document.getElementById('job-location').value = data.formData.jobLocation || '';
+        document.getElementById('job-responsibile').value = data.formData.jobResponsible || '';
+        selectedPersonnel = data.formData.selectedPersonnel || [];
+        displaySelectedPersonnel();
+      }
+      
+      updateWizardUI();
+    } catch (e) {
+      console.error('Errore nel caricamento dello stato wizard:', e);
+    }
+  }
+}
+
+// Pulisci lo stato quando il form viene inviato
+function clearWizardState() {
+  localStorage.removeItem('wizardState');
+  selectedPersonnel = [];
+  document.getElementById('new-job-form').reset();
+  currentStep = 1;
+}
+
 function nextStep() {
+  saveWizardState();
   if (validateStep(currentStep)) {
     if (currentStep < 3) {
       currentStep++;
+      saveWizardState();
       updateWizardUI();
     }
   }
@@ -74,6 +131,7 @@ function nextStep() {
 function previousStep() {
   if (currentStep > 1) {
     currentStep--;
+    saveWizardState();
     updateWizardUI();
   }
 }
@@ -501,10 +559,7 @@ async function createJob(e) {
     
     if (res.ok) {
       alert('Lavoro creato con successo!');
-      document.getElementById('new-job-form').reset();
-      selectedPersonnel = [];
-      selectedMaterials = [];
-      selectedEquipment = [];
+      clearWizardState();
       document.getElementById('personnel-list').innerHTML = '';
       document.getElementById('materials-list').innerHTML = '';
       loadJobs();
