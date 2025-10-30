@@ -197,6 +197,7 @@ function saveWizardState() {
       selectedPersonnel: selectedPersonnel
     }
   };
+  console.log('saveWizardState:', wizardData);
   localStorage.setItem('wizardState', JSON.stringify(wizardData));
 }
 
@@ -293,10 +294,14 @@ function updateWizardUI() {
 
   // Ripristina i valori del form dal wizardState (utile quando si naviga tra i step)
   var saved = localStorage.getItem('wizardState');
+  console.log('updateWizardUI - saved state:', saved);
   if (saved) {
     try {
       var data = JSON.parse(saved);
+      console.log('updateWizardUI - parsed data:', data);
       if (data.formData) {
+        console.log('Setting job-start-date to:', data.formData.jobStartDate);
+        console.log('Setting job-end-date to:', data.formData.jobEndDate);
         document.getElementById('job-name').value = data.formData.jobName || '';
         document.getElementById('job-start-date').value = data.formData.jobStartDate || '';
         document.getElementById('job-end-date').value = data.formData.jobEndDate || '';
@@ -304,7 +309,7 @@ function updateWizardUI() {
         document.getElementById('job-responsibile').value = data.formData.jobResponsible || '';
       }
     } catch (e) {
-      // silent fail
+      console.error('Error in updateWizardUI:', e);
     }
   }
   
