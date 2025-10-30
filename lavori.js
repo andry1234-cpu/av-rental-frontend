@@ -27,6 +27,70 @@ document.addEventListener('DOMContentLoaded', function() {
   if (activeTab === 'new-job') {
     loadWizardState();
   }
+
+// ===== EDIT JOB (apre il wizard con i dati del lavoro) =====
+async function editJob(jobId) {
+  var job = allJobs.find(j => j._id === jobId);
+  if (!job) {
+    alert('Lavoro non trovato');
+    return;
+  }
+
+  // Assicuriamoci di avere responsabili/personale/equipment caricati
+  try {
+    await loadResponsibili();
+    await loadPersonnel();
+    await loadEquipment();
+  } catch (e) {
+    console.warn('Errore nel ricaricare dati necessari per modifica:', e);
+  }
+
+  // Switch alla tab Nuovo Lavoro
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  var newBtn = document.querySelector('[data-tab="new-job"]');
+  if (newBtn) newBtn.classList.add('active');
+  var newContent = document.getElementById('new-job');
+  if (newContent) newContent.classList.add('active');
+  localStorage.setItem('lavoriActiveTab', 'new-job');
+
+  // Popola i campi del wizard
+  document.getElementById('job-name').value = job.name || '';
+  document.getElementById('job-start-date').value = job.startDate || '';
+  document.getElementById('job-end-date').value = job.endDate || '';
+  document.getElementById('job-location').value = job.location || '';
+
+  // Responsabile (può essere object o id)
+  var respVal = '';
+  if (job.responsibile) {
+    if (typeof job.responsibile === 'string') respVal = job.responsibile;
+    else if (typeof job.responsibile === 'object') respVal = job.responsibile._id || job.responsibile.id || job.responsibile;
+  }
+  var respSelect = document.getElementById('job-responsibile');
+  if (respSelect) respSelect.value = respVal;
+
+  // Personale
+  selectedPersonnel = [];
+  if (job.personnel && Array.isArray(job.personnel)) {
+    job.personnel.forEach(p => {
+      if (typeof p === 'string') selectedPersonnel.push(p);
+      else if (p && typeof p === 'object') selectedPersonnel.push(p._id || p.id);
+    });
+  }
+  displaySelectedPersonnel();
+
+  // Per semplicità non ripristiniamo l'equipment complesso qui, solo materiali vuoti
+  selectedMaterials = [];
+  document.getElementById('materials-list').innerHTML = '';
+
+  // Imposta step iniziale (1) o passo Team (2)
+  currentStep = 2;
+  saveWizardState();
+  updateWizardUI();
+
+  // Chiudi modal dettagli
+  closeJobDetailsModal();
+}
 });
 
 // ===== TAB NAVIGATION =====
@@ -815,17 +879,34 @@ function showJobDetails(jobId) {
   var endDate = new Date(job.endDate).toLocaleDateString('it-IT');
   var responsibleName = job.responsibile ? (job.responsibile.name || 'N/A') : 'N/A';
   
-  // Nomi personale
-  var personnelNames = job.personnel ? job.personnel.map(pId => {
-    var person = allPersonnel.find(p => p._id === pId);
-    return person ? person.name : 'N/A';
-  }).join(', ') : 'Nessuno';
-  
-  // Materiali/Equipment
-  var equipmentNames = job.equipment ? job.equipment.map(eq => {
-    var item = allEquipment.find(e => e._id === eq.equipmentId);
-    return item ? (item.name + ' (x' + eq.quantity + ')') : 'N/A';
-  }).join(', ') : 'Nessuno';
+  // Nomi personale (gestisce sia array di id che array di oggetti)
+  var personnelNames = 'Nessuno';
+  if (job.personnel && Array.isArray(job.personnel) && job.personnel.length > 0) {
+    personnelNames = job.personnel.map(p => {
+      if (typeof p === 'string') {
+        var person = allPersonnel.find(x => x._id === p);
+        return person ? person.name : 'N/A';
+      } else if (p && typeof p === 'object') {
+        return p.name || p.fullName || 'N/A';
+      }
+      return 'N/A';
+    }).join(', ');
+  }
+
+  // Materiali/Equipment (gestisce differenti shape)
+  var equipmentNames = 'Nessuno';
+  if (job.equipment && Array.isArray(job.equipment) && job.equipment.length > 0) {
+    equipmentNames = job.equipment.map(eq => {
+      // eq può essere { equipmentId, quantity } oppure { _id, quantity } oppure solo id
+      var id = null;
+      var qty = (eq && eq.quantity) || (eq && eq.qty) || 1;
+      if (typeof eq === 'string') id = eq;
+      else if (eq && typeof eq === 'object') id = eq.equipmentId || eq._id || eq.id;
+
+      var item = allEquipment.find(e => e._id === id);
+      return item ? (item.name + ' (x' + qty + ')') : 'N/A';
+    }).join(', ');
+  }
   
   var content = '<div style="display: flex; flex-direction: column; gap: 1rem;">' +
     '<div><strong>Nome:</strong> ' + job.name + '</div>' +
