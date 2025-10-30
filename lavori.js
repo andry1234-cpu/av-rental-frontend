@@ -27,9 +27,27 @@ function setupTabNavigation() {
   var tabBtns = document.querySelectorAll('.tab-btn');
   var tabContents = document.querySelectorAll('.tab-content');
   
+  // Carica la tab salvata nel localStorage
+  var savedTab = localStorage.getItem('lavoriActiveTab');
+  if (savedTab) {
+    // Rimuovi active da tutti
+    tabBtns.forEach(function(b) { b.classList.remove('active'); });
+    tabContents.forEach(function(tc) { tc.classList.remove('active'); });
+    
+    // Attiva la tab salvata
+    var savedBtn = document.querySelector('[data-tab="' + savedTab + '"]');
+    if (savedBtn) {
+      savedBtn.classList.add('active');
+      document.getElementById(savedTab).classList.add('active');
+    }
+  }
+  
   tabBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       var tabName = btn.getAttribute('data-tab');
+      
+      // Salva la tab nel localStorage
+      localStorage.setItem('lavoriActiveTab', tabName);
       
       tabBtns.forEach(function(b) { b.classList.remove('active'); });
       tabContents.forEach(function(tc) { tc.classList.remove('active'); });
