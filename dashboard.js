@@ -93,6 +93,12 @@ async function loadTodayActiveJobs(retryCount) {
   }
 }
 
+// Helper globale per impostare il valore di un elemento se esiste
+function setStat(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = value || 0;
+}
+
 function displayDashboardStats() {
   console.log('Visualizzazione statistiche dashboard', dashboardStats);
   
@@ -100,12 +106,6 @@ function displayDashboardStats() {
     console.log('Nessun dato da visualizzare');
     return;
   }
-
-  // Helper per impostare il valore di un elemento se esiste
-  var setStat = (id, value) => {
-    var el = document.getElementById(id);
-    if (el) el.textContent = value || 0;
-  };
 
   // Totale quantità in magazzino (quantity - brokenQuantity)
   setStat('total-items', dashboardStats.totalItems || 0);
