@@ -313,9 +313,13 @@ function removePersonnelFromJob(id) {
 
 // ===== FORM LISTENERS =====
 function setupFormListeners() {
-  document.getElementById('new-job-form').addEventListener('submit', createJob);
-  document.getElementById('responsibile-form').addEventListener('submit', createResponsibile);
-  document.getElementById('personnel-form').addEventListener('submit', createPersonnel);
+  var newJobForm = document.getElementById('new-job-form');
+  var responsibleForm = document.getElementById('responsibile-form');
+  var personnelForm = document.getElementById('personnel-form');
+  
+  if (newJobForm) newJobForm.addEventListener('submit', createJob);
+  if (responsibleForm) responsibleForm.addEventListener('submit', createResponsibile);
+  if (personnelForm) personnelForm.addEventListener('submit', createPersonnel);
   
   setupPersonnelSearch();
   
@@ -716,6 +720,8 @@ function displayPersonnel() {
 
 function displayMaterials() {
   var container = document.getElementById('materials-list-admin');
+  if (!container) return; // Se non esiste, non fare nulla
+  
   container.innerHTML = '';
   
   allMaterials.forEach(function(mat) {
