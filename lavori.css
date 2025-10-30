@@ -355,6 +355,15 @@ main h4 {
   opacity: 1;
 }
 
+/* Input validation - highlights invalid dates */
+.form-group input[type="datetime-local"]:invalid {
+  border-color: #d32f2f;
+}
+
+.form-group input[type="datetime-local"]:valid {
+  border-color: #4caf50;
+}
+
 /* MULTI-SELECT */
 .multi-select {
   display: flex;

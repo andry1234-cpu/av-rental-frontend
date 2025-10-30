@@ -478,6 +478,31 @@ function setupFormListeners() {
   
   setupPersonnelSearch();
   
+  // Setup date validation (end date cannot be before start date)
+  var startDateInput = document.getElementById('job-start-date');
+  var endDateInput = document.getElementById('job-end-date');
+  
+  if (startDateInput && endDateInput) {
+    startDateInput.addEventListener('change', function() {
+      // Quando cambia la data di inizio, imposta il minimo della data di fine
+      if (startDateInput.value) {
+        endDateInput.min = startDateInput.value;
+        // Se la data di fine è antecedente, resettiamo il campo
+        if (endDateInput.value && endDateInput.value < startDateInput.value) {
+          endDateInput.value = startDateInput.value;
+        }
+      }
+    });
+    
+    endDateInput.addEventListener('change', function() {
+      // Se l'utente prova a inserire una data di fine antecedente, blocchiamo
+      if (endDateInput.value && startDateInput.value && endDateInput.value < startDateInput.value) {
+        endDateInput.value = startDateInput.value;
+        alert('La data di fine non può essere antecedente alla data di inizio');
+      }
+    });
+  }
+  
   // Archive filters - auto-apply on change
   var filterSearch = document.getElementById('filter-search');
   var resetBtn = document.getElementById('reset-filters-btn');
