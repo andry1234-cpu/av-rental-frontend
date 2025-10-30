@@ -1082,7 +1082,10 @@ function showJobDetails(jobId) {
   // Materiali/Equipment (gestisce differenti shape)
   var equipmentNames = 'Nessuno';
   if (job.equipment && Array.isArray(job.equipment) && job.equipment.length > 0) {
+    console.log('DEBUG showJobDetails: job.equipment =', job.equipment);
     equipmentNames = job.equipment.map(eq => {
+      console.log('DEBUG: processing eq =', eq, ', typeof =', typeof eq);
+      
       var item = null;
       var qty = 1;
       
@@ -1096,21 +1099,28 @@ function showJobDetails(jobId) {
         // È solo un ID
         qty = 1;
         item = allEquipment.find(e => e._id === eq);
+        console.log('DEBUG: eq is string, found item =', item);
       } else if (typeof eq === 'object' && eq) {
         // È un oggetto
+        console.log('DEBUG: eq is object, has name?', eq.name, ', has _id?', eq._id);
         if (eq.name && eq._id) {
           // È l'oggetto completo dell'equipment
+          console.log('DEBUG: eq is complete equipment object');
           item = eq;
           qty = eq.quantity || 1;
         } else {
           // È un reference con equipmentId/quantità
           var id = eq.equipmentId || eq._id || eq.id;
           qty = eq.quantity || eq.qty || 1;
+          console.log('DEBUG: eq is reference with id =', id);
           item = allEquipment.find(e => e._id === id);
+          console.log('DEBUG: found item in allEquipment =', item);
         }
       }
       
-      return item ? (item.name + ' (x' + qty + ')') : 'N/A';
+      var result = item ? (item.name + ' (x' + qty + ')') : 'N/A';
+      console.log('DEBUG: returning result =', result);
+      return result;
     }).join(', ');
   }
   
