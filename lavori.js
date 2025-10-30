@@ -1082,6 +1082,8 @@ function showJobDetails(jobId) {
   // Materiali/Equipment (gestisce differenti shape)
   var equipmentNames = 'Nessuno';
   if (job.equipment && Array.isArray(job.equipment) && job.equipment.length > 0) {
+    console.log('DEBUG: job.equipment =', job.equipment);
+    console.log('DEBUG: allEquipment =', allEquipment);
     equipmentNames = job.equipment.map(eq => {
       // eq può essere { equipmentId, quantity } oppure { _id, quantity } oppure solo id
       var id = null;
@@ -1089,7 +1091,9 @@ function showJobDetails(jobId) {
       if (typeof eq === 'string') id = eq;
       else if (eq && typeof eq === 'object') id = eq.equipmentId || eq._id || eq.id;
 
+      console.log('DEBUG: looking for equipment with id =', id, ', qty =', qty);
       var item = allEquipment.find(e => e._id === id);
+      console.log('DEBUG: found item =', item);
       return item ? (item.name + ' (x' + qty + ')') : 'N/A';
     }).join(', ');
   }
