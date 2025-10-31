@@ -15,6 +15,7 @@ let currentLuogoId = null;
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
   setupTabNavigation();
+  restoreActiveTab();
   loadResponsabili();
   loadTecnici();
   loadLuoghi();
@@ -38,8 +39,26 @@ function setupTabNavigation() {
       // Add active class to clicked button and corresponding content
       this.classList.add('active');
       document.getElementById(tabName).classList.add('active');
+      
+      // Salva la scheda attiva nel localStorage
+      localStorage.setItem('anagrafica-active-tab', tabName);
     });
   });
+}
+
+function restoreActiveTab() {
+  const activeTab = localStorage.getItem('anagrafica-active-tab') || 'responsabili';
+  
+  // Rimuovi active da tutti
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+  
+  // Aggiungi active alla scheda salvata
+  const btn = document.querySelector(`[data-tab="${activeTab}"]`);
+  if (btn) {
+    btn.classList.add('active');
+    document.getElementById(activeTab).classList.add('active');
+  }
 }
 
 // ===== RESPONSABILI =====
