@@ -83,13 +83,15 @@ function updateDateTime() {
   const timeStr = `${hours}:${minutes}:${seconds}`;
   
   // Formatta data
-  const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
-  const mesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  const giorni = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+  const mesi = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno',
+                'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
   
-  const weekday = giorni[now.getDay()];
+  const weekdayRaw = giorni[now.getDay()];
+  const weekday = weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1); // Maiuscola prima lettera
   const day = now.getDate();
-  const month = mesi[now.getMonth()];
+  const monthRaw = mesi[now.getMonth()];
+  const month = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1); // Maiuscola prima lettera
   const year = now.getFullYear();
   
   const dateStr = `${day} ${month} ${year}`;
