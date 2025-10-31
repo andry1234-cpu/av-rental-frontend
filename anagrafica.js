@@ -43,7 +43,7 @@ function setupTabNavigation() {
 // ===== RESPONSABILI =====
 async function loadResponsabili() {
   try {
-    const res = await fetch(API_BASE + '/responsibili');
+    const res = await fetch(API_BASE + '/jobs/responsibili/list');
     if (res.ok) {
       allResponsabili = await res.json();
       displayResponsabili();
@@ -110,8 +110,8 @@ async function saveResponsabile(e) {
   
   try {
     const url = currentResponsabileId 
-      ? API_BASE + '/responsibili/' + currentResponsabileId
-      : API_BASE + '/responsibili';
+      ? API_BASE + '/jobs/responsibili/' + currentResponsabileId
+      : API_BASE + '/jobs/responsibili/create';
     
     const method = currentResponsabileId ? 'PUT' : 'POST';
     
@@ -138,7 +138,7 @@ async function deleteResponsabile(id) {
   if (!confirm('Sei sicuro?')) return;
   
   try {
-    const res = await fetch(API_BASE + '/responsibili/' + id, { method: 'DELETE' });
+    const res = await fetch(API_BASE + '/jobs/responsibili/' + id, { method: 'DELETE' });
     if (res.ok) {
       await loadResponsabili();
       alert('Responsabile eliminato');
@@ -151,7 +151,7 @@ async function deleteResponsabile(id) {
 // ===== TECNICI =====
 async function loadTecnici() {
   try {
-    const res = await fetch(API_BASE + '/personnel');
+    const res = await fetch(API_BASE + '/jobs/personnel/list');
     if (res.ok) {
       allTecnici = await res.json();
       displayTecnici();
@@ -218,8 +218,8 @@ async function saveTecnico(e) {
   
   try {
     const url = currentTecnicoId 
-      ? API_BASE + '/personnel/' + currentTecnicoId
-      : API_BASE + '/personnel';
+      ? API_BASE + '/jobs/personnel/' + currentTecnicoId
+      : API_BASE + '/jobs/personnel/create';
     
     const method = currentTecnicoId ? 'PUT' : 'POST';
     
@@ -246,7 +246,7 @@ async function deleteTecnico(id) {
   if (!confirm('Sei sicuro?')) return;
   
   try {
-    const res = await fetch(API_BASE + '/personnel/' + id, { method: 'DELETE' });
+    const res = await fetch(API_BASE + '/jobs/personnel/' + id, { method: 'DELETE' });
     if (res.ok) {
       await loadTecnici();
       alert('Tecnico eliminato');
@@ -259,13 +259,28 @@ async function deleteTecnico(id) {
 // ===== LUOGHI =====
 async function loadLuoghi() {
   try {
-    const res = await fetch(API_BASE + '/locations');
+    // Tentativo di carico dai dati di Job locations
+    const res = await fetch(API_BASE + '/jobs');
     if (res.ok) {
-      allLuoghi = await res.json();
+      const jobs = await res.json();
+      // Estrai location unici dai jobs
+      const locationSet = new Set();
+      jobs.forEach(job => {
+        if (job.location) locationSet.add(job.location);
+      });
+      allLuoghi = Array.from(locationSet).map(loc => ({
+        _id: loc,
+        name: loc,
+        address: '',
+        city: '',
+        cap: ''
+      }));
       displayLuoghi();
     }
   } catch (e) {
     console.error('Errore caricamento luoghi:', e);
+    // Mostra un messaggio se nessun luogo trovato
+    displayLuoghi();
   }
 }
 
@@ -292,9 +307,8 @@ function displayLuoghi() {
 }
 
 function openLuogoModal() {
-  currentLuogoId = null;
-  document.getElementById('luogo-form').reset();
-  document.getElementById('luogo-modal').classList.add('active');
+  // I luoghi sono read-only
+  alert('I luoghi vengono estratti automaticamente dai lavori.');
 }
 
 function closeLuogoModal() {
@@ -302,66 +316,22 @@ function closeLuogoModal() {
 }
 
 function editLuogo(id) {
-  const luogo = allLuoghi.find(l => l._id === id);
-  if (!luogo) return;
-  
-  currentLuogoId = id;
-  document.getElementById('luogo-name').value = luogo.name || '';
-  document.getElementById('luogo-address').value = luogo.address || '';
-  document.getElementById('luogo-city').value = luogo.city || '';
-  document.getElementById('luogo-cap').value = luogo.cap || '';
-  
-  document.getElementById('luogo-modal').classList.add('active');
+  // I luoghi sono read-only per ora
+  alert('I luoghi sono automaticamente sincronizzati dai lavori registrati.');
 }
 
 async function saveLuogo(e) {
   e.preventDefault();
   
-  const data = {
-    name: document.getElementById('luogo-name').value,
-    address: document.getElementById('luogo-address').value,
-    city: document.getElementById('luogo-city').value,
-    cap: document.getElementById('luogo-cap').value
-  };
-  
-  try {
-    const url = currentLuogoId 
-      ? API_BASE + '/locations/' + currentLuogoId
-      : API_BASE + '/locations';
-    
-    const method = currentLuogoId ? 'PUT' : 'POST';
-    
-    const res = await fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    
-    if (res.ok) {
-      await loadLuoghi();
-      closeLuogoModal();
-      alert(currentLuogoId ? 'Luogo aggiornato' : 'Luogo creato');
-    } else {
-      alert('Errore nel salvataggio');
-    }
-  } catch (e) {
-    console.error('Errore:', e);
-    alert('Errore nel salvataggio');
-  }
+  // Per ora i luoghi vengono estratti dai Jobs e sono read-only
+  // Se vuoi permettere edit/delete, devi creare un modello Location nel backend
+  alert('I luoghi vengono estratti automaticamente dai lavori registrati.');
+  closeLuogoModal();
 }
 
 async function deleteLuogo(id) {
-  if (!confirm('Sei sicuro?')) return;
-  
-  try {
-    const res = await fetch(API_BASE + '/locations/' + id, { method: 'DELETE' });
-    if (res.ok) {
-      await loadLuoghi();
-      alert('Luogo eliminato');
-    }
-  } catch (e) {
-    console.error('Errore:', e);
-  }
+  // I luoghi sono read-only per ora (estratti da jobs)
+  alert('I luoghi sono automaticamente sincronizzati dai lavori registrati.');
 }
 
 // Close modals when clicking outside
