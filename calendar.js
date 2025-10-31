@@ -156,22 +156,11 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
   
   if (multidayJobs.length === 0) return;
   
-  // Creo un contenitore overlay per le barre multi-giorno
-  let overlayContainer = document.querySelector('.calendar-multiday-overlay');
-  if (!overlayContainer) {
-    overlayContainer = document.createElement('div');
-    overlayContainer.className = 'calendar-multiday-overlay';
-    calendarGrid.parentElement.insertBefore(overlayContainer, calendarGrid.nextSibling);
-  } else {
-    // Pulisco da barre precedenti
-    overlayContainer.innerHTML = '';
-  }
-  
   // Definisco l'intervallo di giorni del mese
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
-  const firstDayOfWeek = firstDay.getDay() || 7; // 1-7, dove 1 è lunedì
+  const firstDayOfWeek = (firstDay.getDay() || 7); // 1=lunedì, 7=domenica
   
   // Ordina i lavori per data inizio
   multidayJobs.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
@@ -190,7 +179,7 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
       ? jobEnd.getDate() 
       : daysInMonth;
     
-    // Creo la barra unica che attraversa i giorni
+    // Creo la barra che attraversa i giorni
     const eventBar = document.createElement('div');
     eventBar.className = 'calendar-multiday-event';
     
@@ -201,31 +190,17 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
     eventBar.textContent = job.name;
     eventBar.title = `${job.name} (${startDay}-${endDay})`;
     
-    // Calcolo la posizione
-    // Indice della prima cella del giorno 1: 7 (header) + padding
-    const firstCellIndex = 7 + (firstDayOfWeek - 1);
-    const startCellIndex = firstCellIndex + startDay - 1;
-    const endCellIndex = firstCellIndex + endDay - 1;
+    // Calcolo il numero di giorni che la barra deve coprire
+    const numDays = endDay - startDay + 1;
     
-    // Posizionamento pixel-based
-    // Ogni cella è 48px + 0.3rem gap
-    const cellSize = 48;
-    const gap = 5; // 0.3rem ≈ 5px
+    // Posizionamento nel grid
+    // Row: 8 (7 header + 1 per prima riga giorni) + eventIndex per stacking
+    // Colonna: dipende dal giorno di inizio
+    const gridRow = 8 + Math.floor((startDay - 1 + (firstDayOfWeek - 1)) / 7) + jobIndex;
+    const gridColStart = ((startDay - 1 + (firstDayOfWeek - 1)) % 7) + 1;
     
-    // Calcolo riga e colonna di inizio
-    const colsPerRow = 7;
-    const rowIndex = Math.floor(startCellIndex / colsPerRow);
-    const colIndex = startCellIndex % colsPerRow;
-    
-    const width = (endDay - startDay + 1) * (cellSize + gap);
-    const left = colIndex * (cellSize + gap);
-    const top = rowIndex * (cellSize + gap) + 60; // 60px per l'header della griglia
-    
-    eventBar.style.position = 'absolute';
-    eventBar.style.left = left + 'px';
-    eventBar.style.top = top + 'px';
-    eventBar.style.width = width + 'px';
-    eventBar.style.zIndex = 5 + jobIndex;
+    eventBar.style.gridColumn = `${gridColStart} / span ${numDays}`;
+    eventBar.style.gridRow = gridRow;
     
     // Click per mostrare il modal
     eventBar.addEventListener('click', (e) => {
@@ -233,7 +208,7 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
       showJobDetailModal(job);
     });
     
-    overlayContainer.appendChild(eventBar);
+    calendarGrid.appendChild(eventBar);
     colorIndex++;
   });
 }

@@ -207,20 +207,6 @@ main h2 {
   border-radius: 8px;
   max-height: 380px;
   overflow: hidden;
-  position: relative;
-}
-
-.calendar-multiday-overlay {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  right: 0.5rem;
-  pointer-events: none;
-  height: 380px;
-}
-
-.calendar-multiday-overlay > * {
-  pointer-events: auto;
 }
 
 
@@ -472,7 +458,8 @@ main h2 {
   transition: all 0.2s ease;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 0.5px;
-  margin-bottom: 0.2rem;
+  margin: 0.2rem 0;
+  min-width: 100%;
 }
 
 .calendar-multiday-event:hover {
@@ -501,6 +488,7 @@ main h2 {
 .calendar-multiday-event.event-5 {
   background: linear-gradient(90deg, #F44336 0%, #D32F2F 100%);
 }
+
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
