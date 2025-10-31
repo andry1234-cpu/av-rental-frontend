@@ -123,8 +123,15 @@
             <input type="tel" id="tec-phone" />
           </div>
           <div class="form-group">
-            <label for="tec-role">Categoria/Ruolo</label>
-            <input type="text" id="tec-role" placeholder="es. Audio, Video, Luci..." />
+            <label for="tec-role">Categoria/Ruolo *</label>
+            <select id="tec-role" required>
+              <option value="">-- Seleziona categoria --</option>
+              <option value="Audio">Audio</option>
+              <option value="Video">Video</option>
+              <option value="Luci">Luci</option>
+              <option value="Rigging">Rigging</option>
+              <option value="Broadcast">Broadcast</option>
+            </select>
           </div>
           <div class="form-actions">
             <button type="button" class="btn-secondary" onclick="closeTecnicoModal()">Annulla</button>
