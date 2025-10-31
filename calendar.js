@@ -103,11 +103,22 @@ function addDayToCalendar(grid, day, month, year, jobs, isOtherMonth, isToday = 
     eventEl.className = 'calendar-event';
     eventEl.textContent = job.name;
     eventEl.title = job.name; // Tooltip
-    eventEl.addEventListener('click', () => showJobDetail(job));
+    eventEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showJobDetail(job);
+    });
     eventsContainer.appendChild(eventEl);
   });
   
   dayEl.appendChild(eventsContainer);
+  
+  // Click sulla cella per espandere
+  dayEl.addEventListener('click', () => {
+    if (!isOtherMonth && jobs.length > 0) {
+      expandDay(day, month, year, jobs);
+    }
+  });
+  
   grid.appendChild(dayEl);
 }
 
@@ -143,6 +154,83 @@ function showJobDetail(job) {
   console.log('Job selezionato:', job);
   alert(`${job.name}\n${new Date(job.startDate).toLocaleDateString('it-IT')} - ${new Date(job.endDate).toLocaleDateString('it-IT')}\nLuogo: ${job.location}`);
   // TODO: Implementare modal con dettagli completi
+}
+
+// Espande una cella per mostrare tutti gli eventi del giorno
+function expandDay(day, month, year, jobs) {
+  // Crea overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'expanded-overlay';
+  overlay.addEventListener('click', closeExpandedDay);
+  document.body.appendChild(overlay);
+  
+  // Crea cella espansa
+  const expandedCell = document.createElement('div');
+  expandedCell.className = 'calendar-day expanded';
+  
+  // Pulsante di chiusura
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'close-expanded-btn';
+  closeBtn.textContent = '×';
+  closeBtn.addEventListener('click', closeExpandedDay);
+  expandedCell.appendChild(closeBtn);
+  
+  // Numero del giorno
+  const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                      'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  const dayNumber = document.createElement('div');
+  dayNumber.className = 'calendar-day-number';
+  dayNumber.textContent = `${day} ${monthNames[month]} ${year}`;
+  expandedCell.appendChild(dayNumber);
+  
+  // Container per gli eventi
+  const eventsContainer = document.createElement('div');
+  eventsContainer.className = 'calendar-events';
+  
+  jobs.forEach(job => {
+    const eventEl = document.createElement('div');
+    eventEl.className = 'calendar-event';
+    
+    const eventTitle = document.createElement('strong');
+    eventTitle.textContent = job.name;
+    eventEl.appendChild(eventTitle);
+    
+    const eventDetails = document.createElement('div');
+    eventDetails.style.fontSize = '0.8rem';
+    eventDetails.style.color = '#aaa';
+    eventDetails.style.marginTop = '0.4rem';
+    eventDetails.innerHTML = `
+      <div>📅 ${new Date(job.startDate).toLocaleDateString('it-IT')} - ${new Date(job.endDate).toLocaleDateString('it-IT')}</div>
+      <div>📍 ${job.location}</div>
+      ${job.responsibile ? `<div>👤 ${job.responsibile.name} ${job.responsibile.surname}</div>` : ''}
+    `;
+    eventEl.appendChild(eventDetails);
+    eventsContainer.appendChild(eventEl);
+  });
+  
+  expandedCell.appendChild(eventsContainer);
+  document.body.appendChild(expandedCell);
+  
+  // Chiudi premendo ESC
+  document.addEventListener('keydown', handleEscapeKey);
+}
+
+// Chiude la cella espansa
+function closeExpandedDay() {
+  const overlay = document.querySelector('.expanded-overlay');
+  const expandedCell = document.querySelector('.calendar-day.expanded');
+  
+  if (overlay) overlay.remove();
+  if (expandedCell) expandedCell.remove();
+  
+  document.removeEventListener('keydown', handleEscapeKey);
+}
+
+// Gestisce il tasto ESC
+function handleEscapeKey(e) {
+  if (e.key === 'Escape') {
+    closeExpandedDay();
+  }
 }
 
 // Inizializza quando il DOM è caricato
