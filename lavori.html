@@ -33,7 +33,6 @@
       <div class="tabs-navigation">
         <button class="tab-btn active" data-tab="new-job">Nuovo Lavoro</button>
         <button class="tab-btn" data-tab="job-list">Archivio Lavori</button>
-        <button class="tab-btn" data-tab="manage-data">Gestisci Dati</button>
       </div>
 
       <!-- TAB 1: NEW JOB -->
@@ -171,37 +170,6 @@
         </div>
         
         <div id="jobs-archive" class="jobs-list"></div>
-      </div>
-
-      <!-- TAB 3: MANAGE DATA -->
-      <div id="manage-data" class="tab-content">
-        <h3>Gestisci Dati</h3>
-        
-        <div class="data-sections">
-          <!-- RESPONSABILI -->
-          <section class="data-section">
-            <h4>Responsabili</h4>
-            <div class="data-section-content">
-              <button class="btn-small" onclick="openResponsibileModal()">+ Aggiungi Responsabile</button>
-              <div id="responsibili-list" class="data-list"></div>
-            </div>
-          </section>
-
-          <!-- PERSONALE -->
-          <section class="data-section">
-            <h4>Personale</h4>
-            <div class="data-section-content">
-              <form id="personnel-form" class="quick-form">
-                <input type="text" id="pers-name" placeholder="Nome Personale" required>
-                <input type="text" id="pers-role" placeholder="Ruolo (Tecnico, Operatore, etc.)" required>
-                <input type="email" id="pers-email" placeholder="Email" required>
-                <input type="tel" id="pers-phone" placeholder="Telefono" required>
-                <button type="submit" class="btn-small">Aggiungi</button>
-              </form>
-              <div id="personnel-list-admin" class="data-list"></div>
-            </div>
-          </section>
-        </div>
       </div>
     </div>
   </main>
