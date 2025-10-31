@@ -147,70 +147,8 @@ async function fetchJobsForMonth(year, month) {
 
 // Aggiunge barre multi-giorno per lavori che durano più di un giorno
 function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
-  // Filtro: solo lavori che durano più di un giorno
-  const multidayJobs = jobs.filter(job => {
-    const start = new Date(job.startDate);
-    const end = new Date(job.endDate);
-    return start.toDateString() !== end.toDateString();
-  });
-  
-  if (multidayJobs.length === 0) return;
-  
-  // Definisco l'intervallo di giorni del mese
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const firstDayOfWeek = (firstDay.getDay() || 7); // 1=lunedì, 7=domenica
-  
-  // Ordina i lavori per data inizio
-  multidayJobs.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-  
-  let colorIndex = 0;
-  
-  multidayJobs.forEach((job, jobIndex) => {
-    const jobStart = new Date(job.startDate);
-    const jobEnd = new Date(job.endDate);
-    
-    // Calcolo i giorni del mese che il lavoro copre
-    let startDay = jobStart.getFullYear() === year && jobStart.getMonth() === month 
-      ? jobStart.getDate() 
-      : 1;
-    let endDay = jobEnd.getFullYear() === year && jobEnd.getMonth() === month 
-      ? jobEnd.getDate() 
-      : daysInMonth;
-    
-    // Creo la barra che attraversa i giorni
-    const eventBar = document.createElement('div');
-    eventBar.className = 'calendar-multiday-event';
-    
-    // Assegno la classe di colore
-    const colorClass = `event-${(colorIndex % 5) + 1}`;
-    eventBar.classList.add(colorClass);
-    
-    eventBar.textContent = job.name;
-    eventBar.title = `${job.name} (${startDay}-${endDay})`;
-    
-    // Calcolo il numero di giorni che la barra deve coprire
-    const numDays = endDay - startDay + 1;
-    
-    // Posizionamento nel grid
-    // Row: 8 (7 header + 1 per prima riga giorni) + eventIndex per stacking
-    // Colonna: dipende dal giorno di inizio
-    const gridRow = 8 + Math.floor((startDay - 1 + (firstDayOfWeek - 1)) / 7) + jobIndex;
-    const gridColStart = ((startDay - 1 + (firstDayOfWeek - 1)) % 7) + 1;
-    
-    eventBar.style.gridColumn = `${gridColStart} / span ${numDays}`;
-    eventBar.style.gridRow = gridRow;
-    
-    // Click per mostrare il modal
-    eventBar.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showJobDetailModal(job);
-    });
-    
-    calendarGrid.appendChild(eventBar);
-    colorIndex++;
-  });
+  // DISABLED - Multi-day event spanning removed
+  return;
 }
 
 // Naviga al mese precedente
