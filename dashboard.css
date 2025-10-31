@@ -205,7 +205,8 @@ main h2 {
   background: rgba(0, 0, 0, 0.3);
   padding: 0.5rem;
   border-radius: 8px;
-  max-height: 400px;
+  max-height: 380px;
+  overflow: hidden;
 }
 
 .calendar-day-header {
@@ -227,7 +228,7 @@ main h2 {
   border-radius: 4px;
   padding: 0.3rem;
   min-height: auto;
-  height: 50px;
+  height: 48px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
