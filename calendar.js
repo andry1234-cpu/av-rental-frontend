@@ -256,6 +256,7 @@ function expandDay(day, month, year, jobs) {
   jobs.forEach(job => {
     const eventEl = document.createElement('div');
     eventEl.className = 'calendar-event';
+    eventEl.style.cursor = 'pointer';
     
     const eventTitle = document.createElement('strong');
     eventTitle.textContent = job.name;
@@ -271,6 +272,13 @@ function expandDay(day, month, year, jobs) {
       ${job.responsibile ? `<div>👤 ${job.responsibile.name} ${job.responsibile.surname}</div>` : ''}
     `;
     eventEl.appendChild(eventDetails);
+    
+    // Click sull'evento nella lista espansa apre il modal dei dettagli
+    eventEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showJobDetailModal(job);
+    });
+    
     eventsContainer.appendChild(eventEl);
   });
   
