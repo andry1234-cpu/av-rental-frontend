@@ -58,10 +58,12 @@
         </section>
 
         <section class="dashboard-section">
-          <h3>Prossimi eventi (Google Calendar - Da integrare)</h3>
-          <div id="calendar-placeholder" class="calendar-placeholder">
-            <p>Google Calendar da integrare qui</p>
+          <div class="calendar-header">
+            <button id="prev-month-btn" class="calendar-nav-btn">◀</button>
+            <h3 id="calendar-title">Calendario</h3>
+            <button id="next-month-btn" class="calendar-nav-btn">▶</button>
           </div>
+          <div id="calendar-grid" class="calendar-grid"></div>
         </section>
       </div>
     </div>
@@ -73,6 +75,7 @@
 
   <script src="navigation.js"></script>
   <script src="dateTimeHandler.js"></script>
+  <script src="calendar.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>
