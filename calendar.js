@@ -168,7 +168,13 @@ function showJobDetailModal(job) {
   // Crea overlay
   const overlay = document.createElement('div');
   overlay.className = 'expanded-overlay';
-  overlay.addEventListener('click', closeJobDetailModal);
+  overlay.id = 'detail-modal-overlay';
+  overlay.addEventListener('click', (e) => {
+    // Click sull'overlay chiude solo il modal detail, non la lista
+    if (e.target.id === 'detail-modal-overlay') {
+      closeJobDetailModal();
+    }
+  });
   document.body.appendChild(overlay);
   
   // Crea modal
@@ -219,23 +225,13 @@ function showJobDetailModal(job) {
 
 // Chiude il modal del dettaglio evento
 function closeJobDetailModal() {
-  const overlay = document.querySelector('.expanded-overlay');
+  const overlay = document.getElementById('detail-modal-overlay');
   const modal = document.getElementById('job-detail-modal-calendar');
   
   if (overlay) overlay.remove();
   if (modal) modal.remove();
   
-  // Ricreo l'overlay della lista se esiste ancora
-  const expandedCell = document.querySelector('.calendar-day.expanded');
-  if (expandedCell) {
-    const newOverlay = document.createElement('div');
-    newOverlay.className = 'expanded-overlay';
-    newOverlay.addEventListener('click', closeExpandedDay);
-    document.body.insertBefore(newOverlay, expandedCell);
-  }
-  
   document.removeEventListener('keydown', handleEscapeKeyForModal);
-  document.addEventListener('keydown', handleEscapeKey);
 }
 
 // Gestisce il tasto ESC per il modal
