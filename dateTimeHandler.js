@@ -82,13 +82,18 @@ function updateDateTime() {
   const seconds = String(now.getSeconds()).padStart(2, '0');
   const timeStr = `${hours}:${minutes}:${seconds}`;
   
+  // Funzione per rimuovere accenti
+  const removeAccents = (str) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  };
+  
   // Formatta data
   const giorni = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
   const mesi = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno',
                 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
   
   const weekdayRaw = giorni[now.getDay()];
-  const weekday = weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1); // Maiuscola prima lettera
+  const weekday = removeAccents(weekdayRaw).toUpperCase(); // Tutto maiuscolo senza accenti
   const day = now.getDate();
   const monthRaw = mesi[now.getMonth()];
   const month = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1); // Maiuscola prima lettera
