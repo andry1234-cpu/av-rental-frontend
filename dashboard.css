@@ -315,6 +315,22 @@ main h2 {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  animation: elasticZoom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes elasticZoom {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .calendar-day.expanded .calendar-day-number {
@@ -390,17 +406,21 @@ main h2 {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   max-height: 70vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
+  animation: elasticZoom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes slideUp {
-  from {
+@keyframes elasticZoom {
+  0% {
     opacity: 0;
-    transform: translate(-50%, -45%);
+    transform: translate(-50%, -50%) scale(0.3);
   }
-  to {
+  70% {
+    transform: translate(-50%, -50%) scale(1.05);
     opacity: 1;
-    transform: translate(-50%, -50%);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
 }
 
