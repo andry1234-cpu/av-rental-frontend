@@ -207,7 +207,22 @@ main h2 {
   border-radius: 8px;
   max-height: 380px;
   overflow: hidden;
+  position: relative;
 }
+
+.calendar-multiday-overlay {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  pointer-events: none;
+  height: 380px;
+}
+
+.calendar-multiday-overlay > * {
+  pointer-events: auto;
+}
+
 
 .calendar-day-header {
   text-align: center;
@@ -224,7 +239,7 @@ main h2 {
 .calendar-day {
   aspect-ratio: auto;
   background: #1f1f1f;
-  border: 1px solid #333;
+  border: none;
   border-radius: 4px;
   padding: 0.3rem;
   min-height: auto;
@@ -239,7 +254,6 @@ main h2 {
 
 .calendar-day:hover {
   background: #2a2a2a;
-  border-color: #00BCD4;
   box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
 }
 
@@ -250,13 +264,12 @@ main h2 {
 
 .calendar-day.other-month:hover {
   background: #1f1f1f;
-  border-color: #333;
   box-shadow: none;
 }
 
 .calendar-day.today {
-  border: 2px solid #FF9800;
-  background: rgba(255, 152, 0, 0.1);
+  background: rgba(255, 152, 0, 0.15);
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
 }
 
 .calendar-day-number {
@@ -441,17 +454,10 @@ main h2 {
 }
 
 /* MULTI-DAY EVENT SPANNING */
-.calendar-multiday-container {
-  grid-column: span 1;
-  position: relative;
-  height: 1.2rem;
-  margin-bottom: 0.2rem;
-}
-
 .calendar-multiday-event {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 1.2rem;
   background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%);
   color: #121212;
   padding: 0 0.4rem;
@@ -465,11 +471,13 @@ main h2 {
   transition: all 0.2s ease;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
 }
 
 .calendar-multiday-event:hover {
   background: linear-gradient(90deg, #00E5FF 0%, #00BCD4 100%);
   box-shadow: 0 2px 8px rgba(0, 188, 212, 0.4);
+  transform: scale(1.02);
 }
 
 /* Variazioni di colore per diversi eventi */

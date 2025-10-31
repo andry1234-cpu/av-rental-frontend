@@ -156,16 +156,26 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
   
   if (multidayJobs.length === 0) return;
   
+  // Creo un contenitore overlay per le barre multi-giorno
+  let overlayContainer = document.querySelector('.calendar-multiday-overlay');
+  if (!overlayContainer) {
+    overlayContainer = document.createElement('div');
+    overlayContainer.className = 'calendar-multiday-overlay';
+    calendarGrid.parentElement.insertBefore(overlayContainer, calendarGrid.nextSibling);
+  } else {
+    // Pulisco da barre precedenti
+    overlayContainer.innerHTML = '';
+  }
+  
   // Definisco l'intervallo di giorni del mese
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
-  const firstDayOfWeek = firstDay.getDay();
+  const firstDayOfWeek = firstDay.getDay() || 7; // 1-7, dove 1 è lunedì
   
-  // Ordina i lavori per data inizio (utile per lo z-index e l'assegnazione del colore)
+  // Ordina i lavori per data inizio
   multidayJobs.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
   
-  // Contatore per i colori (event-1 a event-5)
   let colorIndex = 0;
   
   multidayJobs.forEach((job, jobIndex) => {
@@ -180,66 +190,50 @@ function addMultidayEventBars(calendarGrid, jobs, year, month, dayElements) {
       ? jobEnd.getDate() 
       : daysInMonth;
     
-    // Per ogni riga della griglia che il lavoro attraversa
-    // La griglia ha 7 colonne (lunedì-domenica)
-    // Indice della cella iniziale: 7 (header) + padding per il primo giorno
+    // Creo la barra unica che attraversa i giorni
+    const eventBar = document.createElement('div');
+    eventBar.className = 'calendar-multiday-event';
     
-    // Processamento per righe: il lavoro può attraversare più righe della griglia
-    let currentDay = startDay;
-    while (currentDay <= endDay) {
-      // Calcolo il giorno della settimana (0-6, dove 0 è lunedì nella griglia)
-      const dateObj = new Date(year, month, currentDay);
-      const dayOfWeek = dateObj.getDay();
-      
-      // Inizio della riga in cui si trova il giorno corrente
-      const firstDayOfRow = currentDay - dayOfWeek;
-      
-      // Ultimo giorno della riga (min con endDay per non oltrepassare)
-      const lastDayOfRow = Math.min(firstDayOfRow + 6, endDay);
-      
-      // Calcolo il numero di colonne che la barra occupa in questa riga
-      const startDayInRow = Math.max(currentDay, firstDayOfRow + 1);
-      const endDayInRow = lastDayOfRow;
-      const spanDays = endDayInRow - startDayInRow + 1;
-      
-      if (spanDays > 0) {
-        // Calcolo la posizione in grid
-        const startColumn = (startDayInRow - 1) % 7 + 1; // Colonna nel grid (1-7)
-        const columnSpan = spanDays; // Numero di colonne
-        
-        // Creo la barra dell'evento
-        const eventBar = document.createElement('div');
-        eventBar.className = 'calendar-multiday-event';
-        
-        // Assegno la classe di colore (ciclo tra event-1 e event-5)
-        const colorClass = `event-${(colorIndex % 5) + 1}`;
-        eventBar.classList.add(colorClass);
-        
-        eventBar.textContent = job.name;
-        eventBar.title = `${job.name} (${startDayInRow}-${endDayInRow})`;
-        
-        // Posizionamento con CSS Grid
-        // Le colonne nella griglia sono 7, l'header occupa la riga 1, i giorni partono dalla riga 2
-        // Calcolo il numero della riga basato su startDayInRow e firstDayOfWeek
-        const rowNumber = Math.floor((startDayInRow - 1 + (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)) / 7) + 2;
-        
-        eventBar.style.gridColumn = `${startColumn} / span ${columnSpan}`;
-        eventBar.style.gridRow = rowNumber;
-        eventBar.style.zIndex = 5 + jobIndex; // Layering per evitare sovrapposizioni
-        
-        // Click per mostrare il modal
-        eventBar.addEventListener('click', (e) => {
-          e.stopPropagation();
-          showJobDetailModal(job);
-        });
-        
-        calendarGrid.appendChild(eventBar);
-      }
-      
-      // Passo alla prossima riga
-      currentDay = lastDayOfRow + 1;
-    }
+    // Assegno la classe di colore
+    const colorClass = `event-${(colorIndex % 5) + 1}`;
+    eventBar.classList.add(colorClass);
     
+    eventBar.textContent = job.name;
+    eventBar.title = `${job.name} (${startDay}-${endDay})`;
+    
+    // Calcolo la posizione
+    // Indice della prima cella del giorno 1: 7 (header) + padding
+    const firstCellIndex = 7 + (firstDayOfWeek - 1);
+    const startCellIndex = firstCellIndex + startDay - 1;
+    const endCellIndex = firstCellIndex + endDay - 1;
+    
+    // Posizionamento pixel-based
+    // Ogni cella è 48px + 0.3rem gap
+    const cellSize = 48;
+    const gap = 5; // 0.3rem ≈ 5px
+    
+    // Calcolo riga e colonna di inizio
+    const colsPerRow = 7;
+    const rowIndex = Math.floor(startCellIndex / colsPerRow);
+    const colIndex = startCellIndex % colsPerRow;
+    
+    const width = (endDay - startDay + 1) * (cellSize + gap);
+    const left = colIndex * (cellSize + gap);
+    const top = rowIndex * (cellSize + gap) + 60; // 60px per l'header della griglia
+    
+    eventBar.style.position = 'absolute';
+    eventBar.style.left = left + 'px';
+    eventBar.style.top = top + 'px';
+    eventBar.style.width = width + 'px';
+    eventBar.style.zIndex = 5 + jobIndex;
+    
+    // Click per mostrare il modal
+    eventBar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showJobDetailModal(job);
+    });
+    
+    overlayContainer.appendChild(eventBar);
     colorIndex++;
   });
 }
