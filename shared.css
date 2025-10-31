@@ -125,7 +125,7 @@ main {
 .date-time-header .time {
   font-size: 1rem;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Courier New', monospace;
   letter-spacing: 0.5px;
   white-space: nowrap;
   line-height: 1.2;
