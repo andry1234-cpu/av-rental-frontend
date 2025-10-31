@@ -440,6 +440,59 @@ main h2 {
   font-weight: 700;
 }
 
+/* MULTI-DAY EVENT SPANNING */
+.calendar-multiday-container {
+  grid-column: span 1;
+  position: relative;
+  height: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.calendar-multiday-event {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%);
+  color: #121212;
+  padding: 0 0.4rem;
+  border-radius: 3px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.calendar-multiday-event:hover {
+  background: linear-gradient(90deg, #00E5FF 0%, #00BCD4 100%);
+  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.4);
+}
+
+/* Variazioni di colore per diversi eventi */
+.calendar-multiday-event.event-1 {
+  background: linear-gradient(90deg, #00BCD4 0%, #0097A7 100%);
+}
+
+.calendar-multiday-event.event-2 {
+  background: linear-gradient(90deg, #FF9800 0%, #F57C00 100%);
+}
+
+.calendar-multiday-event.event-3 {
+  background: linear-gradient(90deg, #4CAF50 0%, #388E3C 100%);
+}
+
+.calendar-multiday-event.event-4 {
+  background: linear-gradient(90deg, #9C27B0 0%, #7B1FA2 100%);
+}
+
+.calendar-multiday-event.event-5 {
+  background: linear-gradient(90deg, #F44336 0%, #D32F2F 100%);
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .stats-grid {
