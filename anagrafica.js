@@ -5,6 +5,8 @@ const API_BASE = 'https://av-rental-backend.onrender.com/api';
 let allResponsabili = [];
 let allTecnici = [];
 let allLuoghi = [];
+let allTecniciCategories = [];
+let selectedTecnicoFilter = 'all'; // Filtro categoria tecnici
 
 let currentResponsabileId = null;
 let currentTecnicoId = null;
@@ -151,29 +153,78 @@ async function deleteResponsabile(id) {
 // ===== TECNICI =====
 async function loadTecnici() {
   try {
-    const res = await fetch(API_BASE + '/jobs/personnel/list');
-    if (res.ok) {
-      allTecnici = await res.json();
-      displayTecnici();
+    const [resPersonnel, resCategories] = await Promise.all([
+      fetch(API_BASE + '/jobs/personnel/list'),
+      fetch(API_BASE + '/jobs/personnel/categories')
+    ]);
+    
+    if (resPersonnel.ok) {
+      allTecnici = await resPersonnel.json();
     }
+    if (resCategories.ok) {
+      allTecniciCategories = await resCategories.json();
+    }
+    
+    displayTecnici();
+    setupTecniciFilters();
   } catch (e) {
     console.error('Errore caricamento tecnici:', e);
   }
 }
 
+function setupTecniciFilters() {
+  const filterContainer = document.getElementById('tecnici-filters');
+  if (!filterContainer) return;
+  
+  filterContainer.innerHTML = '';
+  
+  // Pulsante "Tutti"
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.textContent = 'Tutti';
+  allBtn.onclick = () => {
+    selectedTecnicoFilter = 'all';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    displayTecnici();
+  };
+  filterContainer.appendChild(allBtn);
+  
+  // Pulsanti per ogni categoria
+  allTecniciCategories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = cat;
+    btn.onclick = () => {
+      selectedTecnicoFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      displayTecnici();
+    };
+    filterContainer.appendChild(btn);
+  });
+}
+
 function displayTecnici() {
   const container = document.getElementById('tecnici-list');
-  if (allTecnici.length === 0) {
+  
+  // Filtra tecnici per categoria
+  let filtered = allTecnici;
+  if (selectedTecnicoFilter !== 'all') {
+    filtered = allTecnici.filter(t => t.role === selectedTecnicoFilter);
+  }
+  
+  if (filtered.length === 0) {
     container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔧</div><p>Nessun tecnico presente</p></div>';
     return;
   }
   
-  container.innerHTML = allTecnici.map(tec => `
+  container.innerHTML = filtered.map(tec => `
     <div class="item-card">
       <div class="item-info">
         <div class="item-name">${tec.name} ${tec.surname || ''}</div>
         ${tec.phone ? `<div class="item-detail"><span class="item-detail-label">Telefono:</span> ${tec.phone}</div>` : ''}
-        ${tec.specialization ? `<div class="item-detail"><span class="item-detail-label">Specializzazione:</span> ${tec.specialization}</div>` : ''}
+        ${tec.role ? `<div class="item-detail"><span class="item-detail-label">Categoria:</span> ${tec.role}</div>` : ''}
       </div>
       <div class="item-actions">
         <button class="btn-small btn-edit" onclick="editTecnico('${tec._id}')">Modifica</button>
@@ -201,7 +252,7 @@ function editTecnico(id) {
   document.getElementById('tec-name').value = tec.name || '';
   document.getElementById('tec-surname').value = tec.surname || '';
   document.getElementById('tec-phone').value = tec.phone || '';
-  document.getElementById('tec-specialization').value = tec.specialization || '';
+  document.getElementById('tec-role').value = tec.role || '';
   
   document.getElementById('tecnico-modal').classList.add('active');
 }
@@ -213,7 +264,7 @@ async function saveTecnico(e) {
     name: document.getElementById('tec-name').value,
     surname: document.getElementById('tec-surname').value,
     phone: document.getElementById('tec-phone').value,
-    specialization: document.getElementById('tec-specialization').value
+    role: document.getElementById('tec-role').value
   };
   
   try {

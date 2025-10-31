@@ -53,6 +53,10 @@
           <h2>Tecnici</h2>
           <button class="btn-primary" onclick="openTecnicoModal()">+ Aggiungi Tecnico</button>
         </div>
+        
+        <!-- Filtri per categoria -->
+        <div id="tecnici-filters" class="filters-container"></div>
+        
         <div id="tecnici-list" class="list-container">
           <p>Caricamento...</p>
         </div>
@@ -119,8 +123,8 @@
             <input type="tel" id="tec-phone" />
           </div>
           <div class="form-group">
-            <label for="tec-specialization">Specializzazione</label>
-            <input type="text" id="tec-specialization" placeholder="es. Audio, Video, Luci..." />
+            <label for="tec-role">Categoria/Ruolo</label>
+            <input type="text" id="tec-role" placeholder="es. Audio, Video, Luci..." />
           </div>
           <div class="form-actions">
             <button type="button" class="btn-secondary" onclick="closeTecnicoModal()">Annulla</button>

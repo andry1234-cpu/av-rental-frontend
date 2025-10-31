@@ -92,6 +92,38 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.filters-container {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 188, 212, 0.1);
+  color: #00BCD4;
+  border: 1px solid #00BCD4;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.filter-btn:hover {
+  background: #00BCD4;
+  color: #000;
+}
+
+.filter-btn.active {
+  background: #00BCD4;
+  color: #000;
+}
+
 .list-container {
   display: grid;
   gap: 1rem;
