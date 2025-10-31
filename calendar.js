@@ -103,16 +103,17 @@ function addDayToCalendar(grid, day, month, year, jobs, isOtherMonth, isToday = 
     eventEl.className = 'calendar-event';
     eventEl.textContent = job.name;
     eventEl.title = job.name; // Tooltip
+    // Click su evento apre modal con dettagli
     eventEl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showJobDetail(job);
+      e.stopPropagation(); // Non propagare al click della cella
+      showJobDetailModal(job);
     });
     eventsContainer.appendChild(eventEl);
   });
   
   dayEl.appendChild(eventsContainer);
   
-  // Click sulla cella per espandere
+  // Click sulla cella per espandere (solo se ha eventi e non è un altro mese)
   dayEl.addEventListener('click', () => {
     if (!isOtherMonth && jobs.length > 0) {
       expandDay(day, month, year, jobs);
@@ -149,11 +150,76 @@ function nextMonth() {
   renderCalendar(currentDate);
 }
 
-// Mostra i dettagli del lavoro
-function showJobDetail(job) {
-  console.log('Job selezionato:', job);
-  alert(`${job.name}\n${new Date(job.startDate).toLocaleDateString('it-IT')} - ${new Date(job.endDate).toLocaleDateString('it-IT')}\nLuogo: ${job.location}`);
-  // TODO: Implementare modal con dettagli completi
+// Mostra modal con dettagli del singolo evento
+function showJobDetailModal(job) {
+  // Crea overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'expanded-overlay';
+  overlay.addEventListener('click', closeJobDetailModal);
+  document.body.appendChild(overlay);
+  
+  // Crea modal
+  const modal = document.createElement('div');
+  modal.className = 'job-detail-modal';
+  modal.id = 'job-detail-modal-calendar';
+  
+  // Pulsante di chiusura
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'close-expanded-btn';
+  closeBtn.textContent = '×';
+  closeBtn.addEventListener('click', closeJobDetailModal);
+  modal.appendChild(closeBtn);
+  
+  // Titolo
+  const title = document.createElement('h2');
+  title.textContent = job.name;
+  title.style.color = '#00BCD4';
+  title.style.marginTop = '0';
+  modal.appendChild(title);
+  
+  // Dettagli
+  const detailsDiv = document.createElement('div');
+  detailsDiv.style.color = '#f0f0f0';
+  detailsDiv.style.fontSize = '0.9rem';
+  detailsDiv.style.lineHeight = '1.8';
+  
+  const startDate = new Date(job.startDate).toLocaleDateString('it-IT');
+  const startTime = new Date(job.startDate).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  const endDate = new Date(job.endDate).toLocaleDateString('it-IT');
+  const endTime = new Date(job.endDate).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  
+  detailsDiv.innerHTML = `
+    <div><strong>📅 Data Inizio:</strong> ${startDate} ${startTime}</div>
+    <div><strong>📅 Data Fine:</strong> ${endDate} ${endTime}</div>
+    <div><strong>📍 Luogo:</strong> ${job.location}</div>
+    ${job.responsibile ? `<div><strong>👤 Responsabile:</strong> ${job.responsibile.name} ${job.responsibile.surname}</div>` : ''}
+    ${job.notes ? `<div><strong>📝 Note:</strong> ${job.notes}</div>` : ''}
+    <div><strong>🔖 Status:</strong> ${job.status}</div>
+  `;
+  modal.appendChild(detailsDiv);
+  
+  document.body.appendChild(modal);
+  
+  // Chiudi premendo ESC
+  document.addEventListener('keydown', handleEscapeKeyForModal);
+}
+
+// Chiude il modal del dettaglio evento
+function closeJobDetailModal() {
+  const overlay = document.querySelector('.expanded-overlay');
+  const modal = document.getElementById('job-detail-modal-calendar');
+  
+  if (overlay) overlay.remove();
+  if (modal) modal.remove();
+  
+  document.removeEventListener('keydown', handleEscapeKeyForModal);
+}
+
+// Gestisce il tasto ESC per il modal
+function handleEscapeKeyForModal(e) {
+  if (e.key === 'Escape') {
+    closeJobDetailModal();
+  }
 }
 
 // Espande una cella per mostrare tutti gli eventi del giorno

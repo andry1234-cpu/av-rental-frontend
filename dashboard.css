@@ -374,6 +374,52 @@ main h2 {
   transform: scale(1.1);
 }
 
+/* JOB DETAIL MODAL */
+.job-detail-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 450px;
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  border: 2px solid #00BCD4;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  max-height: 70vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.job-detail-modal h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.job-detail-modal div {
+  margin-bottom: 0.6rem;
+}
+
+.job-detail-modal strong {
+  color: #00BCD4;
+  font-weight: 700;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .stats-grid {
