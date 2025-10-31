@@ -225,7 +225,17 @@ function closeJobDetailModal() {
   if (overlay) overlay.remove();
   if (modal) modal.remove();
   
+  // Ricreo l'overlay della lista se esiste ancora
+  const expandedCell = document.querySelector('.calendar-day.expanded');
+  if (expandedCell) {
+    const newOverlay = document.createElement('div');
+    newOverlay.className = 'expanded-overlay';
+    newOverlay.addEventListener('click', closeExpandedDay);
+    document.body.insertBefore(newOverlay, expandedCell);
+  }
+  
   document.removeEventListener('keydown', handleEscapeKeyForModal);
+  document.addEventListener('keydown', handleEscapeKey);
 }
 
 // Gestisce il tasto ESC per il modal
