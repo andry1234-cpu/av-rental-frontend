@@ -163,9 +163,13 @@ async function deleteResponsabile(id) {
     if (res.ok) {
       await loadResponsabili();
       alert('Responsabile eliminato');
+    } else {
+      const errData = await res.json();
+      alert('Errore: ' + (errData.error || 'Errore nel salvataggio'));
     }
   } catch (e) {
     console.error('Errore:', e);
+    alert('Errore: ' + e.message);
   }
 }
 
@@ -320,9 +324,13 @@ async function deleteTecnico(id) {
     if (res.ok) {
       await loadTecnici();
       alert('Tecnico eliminato');
+    } else {
+      const errData = await res.json();
+      alert('Errore: ' + (errData.error || 'Errore nel salvataggio'));
     }
   } catch (e) {
     console.error('Errore:', e);
+    alert('Errore: ' + e.message);
   }
 }
 
