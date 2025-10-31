@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anagrafica - AV Rental</title>
+  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="anagrafica.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23000'/%3E%3Ccircle cx='50' cy='30' r='20' fill='%23fff'/%3E%3Ccircle cx='50' cy='70' r='20' fill='%23000'/%3E%3Ccircle cx='50' cy='30' r='5' fill='%23000'/%3E%3Ccircle cx='50' cy='70' r='5' fill='%23fff'/%3E%3C/svg%3E" />
+  <script src="keepalive.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="header-title">
+        <h1>AV RENTAL</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="lavori.html" class="nav-link">Lavori</a>
+        <a href="magazzino.html" class="nav-link">Magazzino</a>
+        <a href="anagrafica.html" class="nav-link active">Anagrafica</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div id="date-time-header" class="date-time-header"></div>
+    
+    <div class="anagrafica-container">
+      <!-- TAB NAVIGATION -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="responsabili">Responsabili</button>
+        <button class="tab-btn" data-tab="tecnici">Tecnici</button>
+        <button class="tab-btn" data-tab="luoghi">Luoghi</button>
+      </div>
+
+      <!-- TAB 1: RESPONSABILI -->
+      <div id="responsabili" class="tab-content active">
+        <div class="section-header">
+          <h2>Responsabili</h2>
+          <button class="btn-primary" onclick="openResponsabileModal()">+ Aggiungi Responsabile</button>
+        </div>
+        <div id="responsabili-list" class="list-container">
+          <p>Caricamento...</p>
+        </div>
+      </div>
+
+      <!-- TAB 2: TECNICI -->
+      <div id="tecnici" class="tab-content">
+        <div class="section-header">
+          <h2>Tecnici</h2>
+          <button class="btn-primary" onclick="openTecnicoModal()">+ Aggiungi Tecnico</button>
+        </div>
+        <div id="tecnici-list" class="list-container">
+          <p>Caricamento...</p>
+        </div>
+      </div>
+
+      <!-- TAB 3: LUOGHI -->
+      <div id="luoghi" class="tab-content">
+        <div class="section-header">
+          <h2>Luoghi</h2>
+          <button class="btn-primary" onclick="openLuogoModal()">+ Aggiungi Luogo</button>
+        </div>
+        <div id="luoghi-list" class="list-container">
+          <p>Caricamento...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: RESPONSABILE -->
+    <div id="responsabile-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeResponsabileModal()">&times;</span>
+        <h3>Responsabile</h3>
+        <form id="responsabile-form">
+          <div class="form-group">
+            <label for="resp-name">Nome *</label>
+            <input type="text" id="resp-name" required />
+          </div>
+          <div class="form-group">
+            <label for="resp-surname">Cognome</label>
+            <input type="text" id="resp-surname" />
+          </div>
+          <div class="form-group">
+            <label for="resp-phone">Telefono</label>
+            <input type="tel" id="resp-phone" />
+          </div>
+          <div class="form-group">
+            <label for="resp-email">Email</label>
+            <input type="email" id="resp-email" />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeResponsabileModal()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: TECNICO -->
+    <div id="tecnico-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeTecnicoModal()">&times;</span>
+        <h3>Tecnico</h3>
+        <form id="tecnico-form">
+          <div class="form-group">
+            <label for="tec-name">Nome *</label>
+            <input type="text" id="tec-name" required />
+          </div>
+          <div class="form-group">
+            <label for="tec-surname">Cognome</label>
+            <input type="text" id="tec-surname" />
+          </div>
+          <div class="form-group">
+            <label for="tec-phone">Telefono</label>
+            <input type="tel" id="tec-phone" />
+          </div>
+          <div class="form-group">
+            <label for="tec-specialization">Specializzazione</label>
+            <input type="text" id="tec-specialization" placeholder="es. Audio, Video, Luci..." />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeTecnicoModal()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: LUOGO -->
+    <div id="luogo-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeLuogoModal()">&times;</span>
+        <h3>Luogo</h3>
+        <form id="luogo-form">
+          <div class="form-group">
+            <label for="luogo-name">Nome Luogo *</label>
+            <input type="text" id="luogo-name" required />
+          </div>
+          <div class="form-group">
+            <label for="luogo-address">Indirizzo</label>
+            <input type="text" id="luogo-address" />
+          </div>
+          <div class="form-group">
+            <label for="luogo-city">Città</label>
+            <input type="text" id="luogo-city" />
+          </div>
+          <div class="form-group">
+            <label for="luogo-cap">CAP</label>
+            <input type="text" id="luogo-cap" />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeLuogoModal()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 WideTech</p>
+  </footer>
+
+  <script src="navigation.js"></script>
+  <script src="dateTimeHandler.js"></script>
+  <script src="anagrafica.js"></script>
+</body>
+</html>
