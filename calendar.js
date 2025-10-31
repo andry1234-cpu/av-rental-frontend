@@ -128,13 +128,13 @@ async function fetchJobsForMonth(year, month) {
 
 // Naviga al mese precedente
 function previousMonth() {
-  currentDate.setMonth(currentDate.getMonth() - 1);
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
   renderCalendar(currentDate);
 }
 
 // Naviga al mese successivo
 function nextMonth() {
-  currentDate.setMonth(currentDate.getMonth() + 1);
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
   renderCalendar(currentDate);
 }
 
